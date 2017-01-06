@@ -1,23 +1,19 @@
-﻿using System;
-using System.Net.Http;
-using System.Threading;
-using Microsoft.AspNetCore.Http;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
+﻿using Microsoft.AspNetCore.Http;
 
-namespace Pc.Information.Api.MiddleWares
+namespace Pc.Information.Utility.Web
 {
     /// <summary>
-    /// WebRequest middleware
+    /// WebRequest extend
     /// </summary>
-    public class WebRequestHelperMiddleWare
+    public static class WebRequestHelper
     {
         /// <summary>
         /// Get Querystring or Request.From params,you also can define params in method param use [FromBody]Type params string.
         /// </summary>
+        /// <param name="context">request context</param>
         /// <param name="key">params key</param>
-        /// <param name="context"></param>
         /// <returns></returns>
-        public static string GetStringFromParameters(string key,HttpContext context)
+        public static string GetStringFromParameters(this HttpContext context, string key)
         {
             var value = string.Empty;
             if (string.IsNullOrEmpty(key))

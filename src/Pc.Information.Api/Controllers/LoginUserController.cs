@@ -1,9 +1,8 @@
-﻿using System;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
-using Pc.Information.Api.MiddleWares;
 using Pc.Information.Model.Config;
 using Pc.Information.Interface.IUserInfoBll;
+using Pc.Information.Utility.Web;
 
 
 namespace Pc.Information.Api.Controllers
@@ -37,7 +36,7 @@ namespace Pc.Information.Api.Controllers
         [HttpGet]
         public UserInfo GetUserInfo()
         {
-            var para = WebRequestHelperMiddleWare.GetStringFromParameters("fresh",HttpContext);
+            var para = HttpContext.GetStringFromParameters("fresh");
             var Info = UserInfoBll.GetUserInfo(string.Empty,string.Empty);
             return new UserInfo();
         }

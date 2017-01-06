@@ -18,7 +18,8 @@
     "Microsoft.Extensions.Options.ConfigurationExtensions": "1.0.0",
     "Pc.Information.Model": "1.0.0-*",
     "Pc.Information.Interface": "1.0.0-*",
-    "Pc.Information.Business": "1.0.0-*"
+    "Pc.Information.Business": "1.0.0-*",
+    "Pc.Information.Utility": "1.0.0-*"
   },
 
   "tools": {
