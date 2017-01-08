@@ -4,7 +4,8 @@
     "dependencies": {
         "NETStandard.Library": "1.6.0",
         "Pc.Information.DataAccess": "1.0.0-*",
-        "Pc.Information.Interface": "1.0.0-*"
+        "Pc.Information.Interface": "1.0.0-*",
+        "Pc.Information.Model": "1.0.0-*"
     },
 
   "frameworks": {

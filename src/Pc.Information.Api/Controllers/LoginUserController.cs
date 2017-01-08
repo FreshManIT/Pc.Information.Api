@@ -3,7 +3,10 @@ using Microsoft.Extensions.Options;
 using Pc.Information.Model.Config;
 using Pc.Information.Interface.IUserInfoBll;
 using Pc.Information.Utility.Web;
-
+using Pc.Information.Model.User;
+using Pc.Information.Api.MiddleWares;
+using Pc.Information.Utility.Configure;
+using System.Linq;
 
 namespace Pc.Information.Api.Controllers
 {
@@ -34,11 +37,15 @@ namespace Pc.Information.Api.Controllers
         }
 
         [HttpGet]
-        public UserInfo GetUserInfo()
+        public PiFUsersModel GetUserInfo()
         {
+            var k=AppConfigurationHelper.GetAppSettings("MySqlConnectionString");
+            var j = UserInfoBll.GetUserInfo();
+            var t = j.ToList();
+            var s = AppConfigurationHelper.GetAppSettings<AppSettingsModel>("AppSettings");
             var para = HttpContext.GetStringFromParameters("fresh");
             var Info = UserInfoBll.GetUserInfo(string.Empty,string.Empty);
-            return new UserInfo();
+            return new PiFUsersModel();
         }
 
         [Route("GetInfo")]
@@ -46,11 +53,5 @@ namespace Pc.Information.Api.Controllers
         {
             return "Freshman";
         }
-    }
-
-    public class UserInfo
-    {
-        public int age = 1;
-        public string name = "Freshman";
     }
 }

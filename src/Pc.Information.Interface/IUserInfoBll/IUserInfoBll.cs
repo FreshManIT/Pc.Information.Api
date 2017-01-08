@@ -1,4 +1,6 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
+using Pc.Information.Model.User;
 
 namespace Pc.Information.Interface.IUserInfoBll
 {
@@ -7,6 +9,8 @@ namespace Pc.Information.Interface.IUserInfoBll
     /// </summary>
     public interface IUserInfoBll
     {
+        IList<PiFUsersModel> GetUserInfo();
+
         /// <summary>
         /// Get user info by username and password.
         /// </summary>
