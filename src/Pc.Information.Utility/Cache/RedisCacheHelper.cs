@@ -219,7 +219,7 @@ namespace Pc.Information.Utility.Cache
         #region [4、Get cache value]
 
         /// <summary>
-        /// Get cache value
+        /// Get cache value,just for cache data type set,string.
         /// </summary>
         /// <typeparam name="T">Date type.</typeparam>
         /// <param name="key">cache key.</param>
@@ -239,7 +239,7 @@ namespace Pc.Information.Utility.Cache
         }
 
         /// <summary>
-        /// Get cache value
+        /// Get cache value,just for cache data type set,string.
         /// </summary>
         /// <typeparam name="T">Date type.</typeparam>
         /// <param name="key">cache key.</param>
