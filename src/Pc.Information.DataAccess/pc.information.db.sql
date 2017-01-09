@@ -114,4 +114,4 @@ CREATE TABLE `pifusers` (
   `PiFBirthday` datetime DEFAULT NULL COMMENT '出生年月',
   `PiFRegisterTime` datetime DEFAULT NULL COMMENT '注册时间',
   PRIMARY KEY (`Id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
