@@ -1,7 +1,8 @@
 ﻿using MySql.Data.MySqlClient;
+using Pc.Information.CoreModel;
 using Pc.Information.Utility.Configure;
 
-namespace Pc.Information.DataAccess.FreshSqlHelper
+namespace Pc.Information.Utility.FreshSqlHelper
 {
     /// <summary>
     /// Sql connection helper class.Use this helper class must first use InitConnectionServer function.
@@ -13,7 +14,8 @@ namespace Pc.Information.DataAccess.FreshSqlHelper
         /// </summary>
         public static void InitConnectionServer()
         {
-            ConnectionString = AppConfigurationHelper.GetAppSettings("MySqlConnectionString");
+            var appSettings = AppConfigurationHelper.GetAppSettings<AppSettingsModel>("AppSettings");
+            ConnectionString = appSettings?.MySqlConnectionString;
         }
 
         /// <summary>
@@ -24,7 +26,7 @@ namespace Pc.Information.DataAccess.FreshSqlHelper
         /// <summary>
         /// Return connection object.
         /// </summary>
-        private static MySqlConnection _conn = null;
+        private static MySqlConnection _conn;
 
         /// <summary>
         /// Lock resource

@@ -7,9 +7,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
 using Pc.Information.Api.MiddleWares;
-using Pc.Information.Model.Config;
 using Pc.Information.Interface.IUserInfoBll;
 using Pc.Information.Business.UserInfoBll;
+using Pc.Information.CoreModel;
 
 namespace Pc.Information.Api
 {

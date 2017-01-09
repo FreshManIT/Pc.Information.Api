@@ -1,4 +1,4 @@
-﻿namespace Pc.Information.Model.Config
+﻿namespace Pc.Information.CoreModel
 {
     /// <summary>
     /// App setting model.
@@ -9,11 +9,16 @@
         /// Redis cach config setting.
         /// </summary>
         public RedisCaching RedisCaching { get; set; }
+
+        /// <summary>
+        /// Mysql connection string.
+        /// </summary>
+        public string MySqlConnectionString { get; set; }
     }
 
-    /// <summary>  
-    /// Redis  
-    /// </summary>  
+    /// <summary>
+    /// Redis
+    /// </summary>
     public class RedisCaching
     {
         /// <summary>

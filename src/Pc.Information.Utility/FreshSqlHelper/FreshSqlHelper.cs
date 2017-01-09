@@ -6,14 +6,14 @@ using System.Threading.Tasks;
 using Dapper;
 using MySql.Data.MySqlClient;
 
-namespace Pc.Information.DataAccess.FreshSqlHelper
+namespace Pc.Information.Utility.FreshSqlHelper
 {
     /// <summary>
     /// FreshSql helper.
     /// </summary>
     public class FreshSqlHelper
     {
-                /// <summary>
+        /// <summary>
         /// Init connection server from single connection object
         /// </summary>
         public FreshSqlHelper()

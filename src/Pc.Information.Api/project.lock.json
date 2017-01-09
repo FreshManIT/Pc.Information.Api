@@ -1733,6 +1733,39 @@
           }
         }
       },
+      "StackExchange.Redis/1.1.608": {
+        "type": "package",
+        "dependencies": {
+          "System.Collections": "4.0.11",
+          "System.Collections.Concurrent": "4.0.12",
+          "System.Collections.NonGeneric": "4.0.1",
+          "System.Diagnostics.Tools": "4.0.1",
+          "System.IO.Compression": "4.1.0",
+          "System.IO.FileSystem": "4.0.1",
+          "System.Linq": "4.1.0",
+          "System.Net.NameResolution": "4.0.0",
+          "System.Net.Security": "4.0.0",
+          "System.Net.Sockets": "4.1.0",
+          "System.Reflection.Emit": "4.0.1",
+          "System.Reflection.Emit.Lightweight": "4.0.1",
+          "System.Reflection.TypeExtensions": "4.1.0",
+          "System.Runtime.Extensions": "4.1.0",
+          "System.Runtime.InteropServices.RuntimeInformation": "4.0.0",
+          "System.Security.Cryptography.Algorithms": "4.2.0",
+          "System.Security.Cryptography.X509Certificates": "4.1.0",
+          "System.Text.RegularExpressions": "4.1.0",
+          "System.Threading": "4.0.11",
+          "System.Threading.Thread": "4.0.0",
+          "System.Threading.ThreadPool": "4.0.10",
+          "System.Threading.Timer": "4.0.1"
+        },
+        "compile": {
+          "lib/netstandard1.5/StackExchange.Redis.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard1.5/StackExchange.Redis.dll": {}
+        }
+      },
       "System.AppContext/4.1.0": {
         "type": "package",
         "dependencies": {
@@ -3789,13 +3822,25 @@
           "netstandard1.6/Pc.Information.Business.dll": {}
         }
       },
+      "Pc.Information.CoreModel/1.0.0": {
+        "type": "project",
+        "framework": ".NETStandard,Version=v1.6",
+        "dependencies": {
+          "NETStandard.Library": "1.6.0"
+        },
+        "compile": {
+          "netstandard1.6/Pc.Information.CoreModel.dll": {}
+        },
+        "runtime": {
+          "netstandard1.6/Pc.Information.CoreModel.dll": {}
+        }
+      },
       "Pc.Information.DataAccess/1.0.0": {
         "type": "project",
         "framework": ".NETStandard,Version=v1.6",
         "dependencies": {
-          "Dapper": "1.50.2",
-          "MySql.Data.Core": "7.0.4-IR-191",
           "NETStandard.Library": "1.6.0",
+          "Pc.Information.Model": "1.0.0",
           "Pc.Information.Utility": "1.0.0",
           "System.Text.Encoding.CodePages": "4.0.1"
         },
@@ -3837,13 +3882,18 @@
         "type": "project",
         "framework": ".NETStandard,Version=v1.6",
         "dependencies": {
+          "Dapper": "1.50.2",
           "Microsoft.AspNetCore.Http": "1.1.0",
           "Microsoft.Extensions.Configuration": "1.0.0",
           "Microsoft.Extensions.Configuration.FileExtensions": "1.0.0",
           "Microsoft.Extensions.Configuration.Json": "1.0.0",
           "Microsoft.Extensions.DependencyInjection": "1.0.0",
           "Microsoft.Extensions.Options.ConfigurationExtensions": "1.0.0",
-          "NETStandard.Library": "1.6.0"
+          "MySql.Data.Core": "7.0.4-IR-191",
+          "NETStandard.Library": "1.6.0",
+          "Pc.Information.CoreModel": "1.0.0",
+          "StackExchange.Redis": "1.1.608",
+          "System.Text.Encoding.CodePages": "4.0.1"
         },
         "compile": {
           "netstandard1.6/Pc.Information.Utility.dll": {}
@@ -5250,6 +5300,23 @@
         "runtime.win7-x86.runtime.native.System.Data.SqlClient.sni.4.0.1.nupkg.sha512",
         "runtime.win7-x86.runtime.native.System.Data.SqlClient.sni.nuspec",
         "runtimes/win7-x86/native/sni.dll"
+      ]
+    },
+    "StackExchange.Redis/1.1.608": {
+      "sha512": "SXorfrt0kXU1ueYRvdZcZ87da7o75j0LTrOtRD7xbD1b/AhnL9nTohmHfz4Ob7ENwf7ecxl1L3vmSET3nemz7w==",
+      "type": "package",
+      "path": "StackExchange.Redis/1.1.608",
+      "files": [
+        "StackExchange.Redis.1.1.608.nupkg.sha512",
+        "StackExchange.Redis.nuspec",
+        "lib/net40/StackExchange.Redis.dll",
+        "lib/net40/StackExchange.Redis.xml",
+        "lib/net45/StackExchange.Redis.dll",
+        "lib/net45/StackExchange.Redis.xml",
+        "lib/net46/StackExchange.Redis.dll",
+        "lib/net46/StackExchange.Redis.xml",
+        "lib/netstandard1.5/StackExchange.Redis.dll",
+        "lib/netstandard1.5/StackExchange.Redis.xml"
       ]
     },
     "System.AppContext/4.1.0": {
@@ -9984,6 +10051,11 @@
       "path": "../Pc.Information.Business/project.json",
       "msbuildProject": "../Pc.Information.Business/Pc.Information.Business.xproj"
     },
+    "Pc.Information.CoreModel/1.0.0": {
+      "type": "project",
+      "path": "../Pc.Information.CoreModel/project.json",
+      "msbuildProject": "../Pc.Information.CoreModel/Pc.Information.CoreModel.xproj"
+    },
     "Pc.Information.DataAccess/1.0.0": {
       "type": "project",
       "path": "../Pc.Information.DataAccess/project.json",
@@ -10021,6 +10093,7 @@
       "Microsoft.Extensions.Options.ConfigurationExtensions >= 1.0.0",
       "Microsoft.NETCore.App >= 1.0.1",
       "Pc.Information.Business >= 1.0.0-*",
+      "Pc.Information.CoreModel >= 1.0.0-*",
       "Pc.Information.Interface >= 1.0.0-*",
       "Pc.Information.Model >= 1.0.0-*",
       "Pc.Information.Utility >= 1.0.0-*"

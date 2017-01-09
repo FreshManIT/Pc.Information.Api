@@ -1,12 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
-using Pc.Information.Model.Config;
 using Pc.Information.Interface.IUserInfoBll;
 using Pc.Information.Utility.Web;
 using Pc.Information.Model.User;
-using Pc.Information.Api.MiddleWares;
-using Pc.Information.Utility.Configure;
-using System.Linq;
+using Pc.Information.Utility.Cache;
+using Pc.Information.CoreModel;
 
 namespace Pc.Information.Api.Controllers
 {
@@ -39,10 +37,13 @@ namespace Pc.Information.Api.Controllers
         [HttpGet]
         public PiFUsersModel GetUserInfo()
         {
-            var k=AppConfigurationHelper.GetAppSettings("MySqlConnectionString");
-            var j = UserInfoBll.GetUserInfo();
-            var t = j.ToList();
-            var s = AppConfigurationHelper.GetAppSettings<AppSettingsModel>("AppSettings");
+            //var k=AppConfigurationHelper.GetAppSettings("AppSettings:MySqlConnectionString");//Get mysql connection string.
+            //var j = UserInfoBll.GetUserInfo();//Get user info.
+            //var isexti = RedisCacheHelper.Exists("s");
+            //var add1 = RedisCacheHelper.AddSet("s","1");
+            //var add2 = RedisCacheHelper.AddSet("s", "aaaaaaaaaaaaaaa");
+            //var add3 = RedisCacheHelper.AddSet("s", "bbbbbbbbbbbbbbbbbbb");
+            //var sjfid = RedisCacheHelper.Get<string>("s");
             var para = HttpContext.GetStringFromParameters("fresh");
             var Info = UserInfoBll.GetUserInfo(string.Empty,string.Empty);
             return new PiFUsersModel();

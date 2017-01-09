@@ -6,7 +6,12 @@
         "Microsoft.Extensions.DependencyInjection": "1.0.0",
         "Microsoft.Extensions.Configuration.FileExtensions": "1.0.0",
         "NETStandard.Library": "1.6.0",
-        "Microsoft.Extensions.Options.ConfigurationExtensions": "1.0.0"
+        "Microsoft.Extensions.Options.ConfigurationExtensions": "1.0.0",
+        "StackExchange.Redis": "1.1.608",
+        "Pc.Information.CoreModel": "1.0.0-*",
+        "Dapper": "1.50.2",
+        "MySql.Data.Core": "7.0.4-IR-191",
+        "System.Text.Encoding.CodePages": "4.0.1"
     },
     "frameworks": {
         "netstandard1.6": {
