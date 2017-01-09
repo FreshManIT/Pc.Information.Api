@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Pc.Information.DataAccess.FreshSqlHelper;
+using Pc.Information.DataAccess.UserInfoDataAccess;
 using Pc.Information.Interface.IUserInfoBll;
 using Pc.Information.Model.User;
 
@@ -35,10 +35,9 @@ namespace Pc.Information.Business.UserInfoBll
 
         IList<PiFUsersModel> IUserInfoBll.GetUserInfo()
         {
-            var sql = "select * FROM pifusers";
-            var fhelper = new FreshSqlHelper();
-            var userElist = fhelper.FindToList<PiFUsersModel>(sql, null, false);
-            return userElist.ToList();
+            var userInfoDataAccess = new UserInfoDataAccess();
+            var useElist=userInfoDataAccess.GetUserInfo();
+            return useElist;
         }
     }
 }

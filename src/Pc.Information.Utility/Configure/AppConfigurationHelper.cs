@@ -31,6 +31,12 @@ namespace Pc.Information.Utility.Configure
             return appconfig;
         }
 
+        /// <summary>
+        /// Get app settings config value
+        /// </summary>
+        /// <param name="key">config key</param>
+        /// <param name="filePath">you need get file path,which must have this file.</param>
+        /// <returns></returns>
         public static string GetAppSettings(string key, string filePath = "appsettings.json")
         {
             IConfiguration config = new ConfigurationBuilder()
