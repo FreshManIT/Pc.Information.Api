@@ -5,6 +5,8 @@ using Pc.Information.Utility.Web;
 using Pc.Information.Model.User;
 using Pc.Information.Utility.Cache;
 using Pc.Information.CoreModel;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Pc.Information.Api.Controllers
 {
@@ -35,18 +37,10 @@ namespace Pc.Information.Api.Controllers
         }
 
         [HttpGet]
-        public PiFUsersModel GetUserInfo()
+        public List<PiFUsersModel> GetUserInfo()
         {
-            //var k=AppConfigurationHelper.GetAppSettings("AppSettings:MySqlConnectionString");//Get mysql connection string.
-            //var j = UserInfoBll.GetUserInfo();//Get user info.
-            //var isexti = RedisCacheHelper.Exists("s");
-            //var add1 = RedisCacheHelper.AddSet("s","1");
-            //var add2 = RedisCacheHelper.AddSet("s", "aaaaaaaaaaaaaaa");
-            //var add3 = RedisCacheHelper.AddSet("s", "bbbbbbbbbbbbbbbbbbb");
-            //var sjfid = RedisCacheHelper.Get<string>("s");
-            var para = HttpContext.GetStringFromParameters("fresh");
-            var Info = UserInfoBll.GetUserInfo(string.Empty,string.Empty);
-            return new PiFUsersModel();
+            var Info = UserInfoBll.GetUserInfo();
+            return Info.ToList();
         }
 
         [Route("GetInfo")]
