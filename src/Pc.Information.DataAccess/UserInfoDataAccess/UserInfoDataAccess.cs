@@ -14,6 +14,8 @@ namespace Pc.Information.DataAccess.UserInfoDataAccess
             var sql = "select * FROM pifusers";
             var fhelper = new FreshSqlHelper();
             var userElist = fhelper.FindToList<PiFUsersModel>(sql, null, false);
+            int sqlint;
+            fhelper.GetCommPaddMySql(null, null, null, null, 0, 1, out sqlint);
             return userElist.ToList();
         }
     }
