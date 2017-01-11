@@ -1,11 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Data;
-using System.Reflection;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Dapper;
 using MySql.Data.MySqlClient;
+using Pc.Information.Utility.Email;
 
 namespace Pc.Information.Utility.FreshSqlHelper
 {
@@ -22,7 +22,7 @@ namespace Pc.Information.Utility.FreshSqlHelper
             FreshSqlConnectionHelper.InitConnectionServer();
         }
 
-        #region [1、ExcuteNonQuery 增、删、改同步操作]
+        #region [1、ExcuteNonQuery get result of execute sql.]
 
         /// <summary>
         /// 增、删、改同步操作
@@ -39,9 +39,6 @@ namespace Pc.Information.Utility.FreshSqlHelper
             result = con.Execute(cmd, param, null, null, flag ? CommandType.StoredProcedure : CommandType.Text);
             return result;
         }
-        #endregion
-
-        #region [2、ExcuteNonQueryAsync 增、删、改异步操作]
 
         /// <summary>
         /// 增、删、改异步操作
@@ -67,7 +64,7 @@ namespace Pc.Information.Utility.FreshSqlHelper
         }
         #endregion
 
-        #region [3、ExecuteScalar 同步查询操作]
+        #region [2、ExecuteScalar get single value sql result.]
 
         /// <summary>
         /// 同步查询操作
@@ -83,9 +80,6 @@ namespace Pc.Information.Utility.FreshSqlHelper
             var result = con.ExecuteScalar(cmd, param, null, null, flag ? CommandType.StoredProcedure : CommandType.Text);
             return result;
         }
-        #endregion
-
-        #region [4、ExecuteScalarAsync 异步查询操作]
 
         /// <summary>
         /// 异步查询操作
@@ -105,13 +99,13 @@ namespace Pc.Information.Utility.FreshSqlHelper
             }
             else
             {
-                result =await con.ExecuteScalarAsync(cmd, param, null, null, CommandType.Text);
+                result = await con.ExecuteScalarAsync(cmd, param, null, null, CommandType.Text);
             }
             return result;
         }
         #endregion
 
-        #region [5、FindOne  同步查询一条数据]
+        #region [3、FindOne get first one data.]
         /// <summary>
         /// 同步查询一条数据
         /// </summary>
@@ -124,28 +118,10 @@ namespace Pc.Information.Utility.FreshSqlHelper
         public T FindOne<T>(string cmd, DynamicParameters param, bool flag = false, string connection = null) where T : class, new()
         {
             MySqlConnection con = FreshSqlConnectionHelper.GetConnection(connection);
-            IDataReader dataReader = con.ExecuteReader(cmd, param, null, null, flag ? CommandType.StoredProcedure : CommandType.Text);
-            if (dataReader == null) return null;
-            Type type = typeof(T);
-            T t = new T();
-            foreach (var item in type.GetProperties())
-            {
-                for (int i = 0; i < dataReader.FieldCount; i++)
-                {
-                    //属性名与查询出来的列名比较
-                    if (item.Name.ToLower() != dataReader.GetName(i).ToLower()) continue;
-                    var kvalue = dataReader[item.Name];
-                    if (kvalue == DBNull.Value) continue;
-                    item.SetValue(t, kvalue, null);
-                    break;
-                }
-            }
-            con.Close();
-            return t;
+            var dataReader = con.QueryFirst<T>(cmd, param, commandType: flag ? CommandType.StoredProcedure : CommandType.Text);
+            return dataReader;
         }
-        #endregion
 
-        #region [6、FindOne  异步查询一条数据]
         /// <summary>
         /// 异步查询一条数据
         /// </summary>
@@ -158,36 +134,12 @@ namespace Pc.Information.Utility.FreshSqlHelper
         public async Task<T> FindOneAsync<T>(string cmd, DynamicParameters param, bool flag = false, string connection = null) where T : class, new()
         {
             MySqlConnection con = FreshSqlConnectionHelper.GetConnection(connection);
-            IDataReader dataReader;
-            if (flag)
-            {
-                dataReader = await con.ExecuteReaderAsync(cmd, param, null, null, CommandType.StoredProcedure);
-            }
-            else
-            {
-                dataReader = await con.ExecuteReaderAsync(cmd, param, null, null, CommandType.Text);
-            }
-            if (dataReader == null) return null;
-            Type type = typeof(T);
-            T t = new T();
-            foreach (var item in type.GetProperties())
-            {
-                for (int i = 0; i < dataReader.FieldCount; i++)
-                {
-                    //属性名与查询出来的列名比较
-                    if (item.Name.ToLower() != dataReader.GetName(i).ToLower()) continue;
-                    var kvalue = dataReader[item.Name];
-                    if (kvalue == DBNull.Value) continue;
-                    item.SetValue(t, kvalue, null);
-                    break;
-                }
-            }
-            con.Close();
-            return t;
+            var dataReader = await con.QueryFirstAsync<T>(cmd, param, commandType: flag ? CommandType.StoredProcedure : CommandType.Text);
+            return dataReader;
         }
         #endregion
 
-        #region [7、FindToList  同步查询数据集合]
+        #region [4、FindToList  find data to list]
         /// <summary>
         /// 同步查询数据集合
         /// </summary>
@@ -200,33 +152,10 @@ namespace Pc.Information.Utility.FreshSqlHelper
         public IList<T> FindToList<T>(string cmd, DynamicParameters param, bool flag = false, string connection = null) where T : class, new()
         {
             MySqlConnection con = FreshSqlConnectionHelper.GetConnection(connection);
-            IDataReader dataReader = con.ExecuteReader(cmd, param, null, null, flag ? CommandType.StoredProcedure : CommandType.Text);
-            if (dataReader == null) return null;
-            Type type = typeof(T);
-            List<T> tlist = new List<T>();
-            while (dataReader.Read())
-            {
-                T t = new T();
-                foreach (var item in type.GetProperties())
-                {
-                    for (int i = 0; i < dataReader.FieldCount; i++)
-                    {
-                        //属性名与查询出来的列名比较
-                        if (item.Name.ToLower() != dataReader.GetName(i).ToLower()) continue;
-                        var kvalue = dataReader[item.Name];
-                        if (kvalue == DBNull.Value) continue;
-                        item.SetValue(t, kvalue, null);
-                        break;
-                    }
-                }
-                tlist.Add(t);
-            }
-            con.Close();
-            return tlist;
+            var dataReader = con.Query<T>(cmd, param, commandType: flag ? CommandType.StoredProcedure : CommandType.Text);
+            return dataReader.ToList();
         }
-        #endregion
 
-        #region [8、FindToListAsync  异步查询数据集合]
         /// <summary>
         /// 异步查询数据集合
         /// </summary>
@@ -239,42 +168,17 @@ namespace Pc.Information.Utility.FreshSqlHelper
         public async Task<IList<T>> FindToListAsync<T>(string cmd, DynamicParameters param, bool flag = false, string connection = null) where T : class, new()
         {
             MySqlConnection con = FreshSqlConnectionHelper.GetConnection(connection);
-            IDataReader dataReader;
-            if (flag)
-            {
-                dataReader = await con.ExecuteReaderAsync(cmd, param, null, null, CommandType.StoredProcedure);
-            }
-            else
-            {
-                dataReader = await con.ExecuteReaderAsync(cmd, param, null, null, CommandType.Text);
-            }
-            if (dataReader == null) return null;
-            Type type = typeof(T);
-            List<T> tlist = new List<T>();
-            while (dataReader.Read())
-            {
-                T t = new T();
-                foreach (var item in type.GetProperties())
-                {
-                    for (int i = 0; i < dataReader.FieldCount; i++)
-                    {
-                        //属性名与查询出来的列名比较
-                        if (item.Name.ToLower() != dataReader.GetName(i).ToLower()) continue;
-                        var kvalue = dataReader[item.Name];
-                        if (kvalue == DBNull.Value) continue;
-                        item.SetValue(t, kvalue, null);
-                        break;
-                    }
-                }
-                tlist.Add(t);
-            }
-            con.Close();
-            return tlist;
+            var dataReader = await con.QueryAsync<T>(cmd, param, commandType: flag ? CommandType.StoredProcedure : CommandType.Text);
+            return dataReader.ToList();
         }
         #endregion
 
+        #region [5、Slow searchPage data]
         /// <summary>
-        /// MySQL分页
+        /// search page data,slowly.e.g:long sqlint;
+        /// var param = new DynamicParameters();
+        /// param.Add("id",1);
+        /// var pagedata = fhelper.SearchPageList< PiFUsersModel />("pifusers", "and id=@id", null, "*", 0, 1, param, out sqlint);
         /// </summary>
         /// <param name="tbName">table name</param>
         /// <param name="strWhere">where case</param>
@@ -282,12 +186,48 @@ namespace Pc.Information.Utility.FreshSqlHelper
         /// <param name="fieldList">search field</param>
         /// <param name="pageIndex">current page number</param>
         /// <param name="pageSize">page size</param>
+        /// <param name="param">params.</param>
         /// <param name="allCount">all count number.</param>
         /// <param name="connectionstring">connection string.</param>
-        /// <returns></returns>
-        public void GetCommPaddMySql(string tbName, string strWhere, string orderBy, string fieldList, int pageIndex, int pageSize, out int allCount,string connectionstring=null)
+        /// <returns>page data</returns>
+        public IList<T> SearchPageList<T>(string tbName, string strWhere, string orderBy, string fieldList, int pageIndex, int pageSize, DynamicParameters param, out long allCount, string connectionstring = null) where T : class, new()
         {
-            allCount = 0;
+            MySqlConnection con = FreshSqlConnectionHelper.GetConnection(connectionstring);
+            //Search count.
+            var searchCountStr = $"SELECT COUNT(*) as dataCount from {tbName}  where 1=1 {strWhere}";
+            var dataCount = con.ExecuteScalar(searchCountStr,param);
+            allCount = (long)dataCount;
+            if (pageIndex < 1)
+            {
+                pageIndex = 1;
+            }
+            long startPageNum = (pageIndex - 1) * pageSize;
+            StringBuilder sql = new StringBuilder();
+            sql.Append("SELECT ");
+            sql.Append($" {fieldList} FROM {tbName} WHERE 1=1 {strWhere} ");
+            sql.Append($" {orderBy} limit {startPageNum} ");
+            sql.Append($",{pageSize} ");
+            var tList = con.Query<T>(sql.ToString(), param, commandType: CommandType.Text);
+            return tList.ToList();
+        }
+
+        /// <summary>
+        /// search page data,slowly.e.g:long sqlint;
+        /// var param = new DynamicParameters();
+        /// param.Add("id",1);
+        /// var pagedata = fhelper.SearchPageList< PiFUsersModel />("pifusers", "and id=@id", null, "*", 0, 1, param, out sqlint);
+        /// </summary>
+        /// <param name="tbName">table name</param>
+        /// <param name="strWhere">where case</param>
+        /// <param name="orderBy">order field.</param>
+        /// <param name="fieldList">search field</param>
+        /// <param name="pageIndex">current page number</param>
+        /// <param name="pageSize">page size</param>
+        /// <param name="param">params.</param>
+        /// <param name="connectionstring">connection string.</param>
+        /// <returns>page data</returns>
+        public async Task<IList<T>> SearchPageListAsync<T>(string tbName, string strWhere, string orderBy, string fieldList, int pageIndex, int pageSize, DynamicParameters param, string connectionstring = null) where T : class, new()
+        {
             MySqlConnection con = FreshSqlConnectionHelper.GetConnection(connectionstring);
             if (pageIndex < 1)
             {
@@ -295,41 +235,13 @@ namespace Pc.Information.Utility.FreshSqlHelper
             }
             long startPageNum = (pageIndex - 1) * pageSize;
             StringBuilder sql = new StringBuilder();
-            sql.Append("SELECT SQL_NO_CACHE SQL_CALC_FOUND_ROWS ");
-            sql.Append($" {fieldList} FROM {tbName} WHERE {strWhere} ");
+            sql.Append("SELECT ");
+            sql.Append($" {fieldList} FROM {tbName} WHERE 1=1 {strWhere} ");
             sql.Append($" {orderBy} limit {startPageNum} ");
             sql.Append($",{pageSize} ");
-            sql.Append(" ;SELECT FOUND_ROWS(); ");
-            var ds = con.ExecuteReader(@"SELECT SQL_CALC_FOUND_ROWS
-	*
-FROM 
-	world.city 
-WHERE 
-	id <= ( 
-		SELECT 
-			id 
-		FROM 
-			world.city  
-WHERE CountryCode='CHN' 
-		ORDER BY 
-			id DESC 
-		LIMIT 20,1 
-	) 
-ORDER BY 
-	id DESC 
-LIMIT 20;
-
-select FOUND_ROWS()");
-            while (ds.Read())
-            {
-                    for (int i = 0; i < ds.FieldCount; i++)
-                    {
-                        //属性名与查询出来的列名比较
-                        var name = ds.GetName(i).ToLower();
-                        var value = ds[name];
-
-                    }
-            }
+            var tList = await con.QueryAsync<T>(sql.ToString(), param, commandType: CommandType.Text);
+            return tList.ToList();
         }
+        #endregion
     }
 }
