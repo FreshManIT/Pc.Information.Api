@@ -14,12 +14,9 @@ namespace Pc.Information.Business.UserInfoBll
     public class UserInfoBll: IUserInfoBll
     {
         /// <summary>
-        /// Test MySqlhelper method.
+        /// 数据访问对象
         /// </summary>
-        public void GetUserInfoT()
-        {
-            
-        }
+        readonly UserInfoDataAccess _userInfoDataAccess = new UserInfoDataAccess();
 
         /// <summary>
         /// Get user info by username and password.
@@ -27,17 +24,34 @@ namespace Pc.Information.Business.UserInfoBll
         /// <param name="username">login user name</param>
         /// <param name="password">login for secret</param>
         /// <returns></returns>
-        public Task GetUserInfo(string username, string password)
+        public PiFUsersModel GetUserInfo(string username, string password)
         {
-            var info = Task.Factory.StartNew(GetUserInfoT);
+            var info = _userInfoDataAccess.GetUserInfo(username, password);
             return info;
         }
 
-        IList<PiFUsersModel> IUserInfoBll.GetUserInfo()
+        /// <summary>
+        /// Add new use info.
+        /// </summary>
+        /// <param name="newUserInfoModel"></param>
+        /// <returns></returns>
+        public int AddUserInfo(PiFUsersModel newUserInfoModel)
         {
-            var userInfoDataAccess = new UserInfoDataAccess();
-            var useElist=userInfoDataAccess.GetUserInfo();
-            return useElist;
+            if (newUserInfoModel == null) return 0;
+            var userId = _userInfoDataAccess.AddUserInfo(newUserInfoModel);
+            return userId;
+        }
+
+        /// <summary>
+        /// Update user info.
+        /// </summary>
+        /// <param name="newUserInfoModel"></param>
+        /// <returns></returns>
+        public int UpdateUserInfo(PiFUsersModel newUserInfoModel)
+        {
+            if (newUserInfoModel == null) return 0;
+            var userId = _userInfoDataAccess.UpdateUserInfo(newUserInfoModel);
+            return userId;
         }
     }
 }
