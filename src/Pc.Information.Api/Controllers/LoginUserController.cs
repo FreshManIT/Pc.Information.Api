@@ -36,11 +36,19 @@ namespace Pc.Information.Api.Controllers
             UserInfoBll = userInfoBll;
         }
 
-        [HttpGet]
-        public List<PiFUsersModel> GetUserInfo()
+        /// <summary>
+        /// User login
+        /// </summary>
+        /// <param name="userName"></param>
+        /// <param name="password"></param>
+        /// <returns></returns>
+        [Route("Login")]
+        public PiFUsersModel Login(string userName,string password)
         {
-            var Info = UserInfoBll.GetUserInfo();
-            return Info.ToList();
+            var info = UserInfoBll.GetUserInfo(userName, password);
+            var newUseInfo = new PiFUsersModel { PiFBirthday = new System.DateTime(1994, 5, 3), PiFEmailAddress = "langyuelei@163.com", PiFJob = "前端开发助理", PiFPassword = "langyuelei", PiFRegisterTime = System.DateTime.Now, PiFRule = 1, PiFSex = 1, PiFUserName = "langyuelei" };
+            var userId = UserInfoBll.UpdateUserInfo(newUseInfo);
+            return info;
         }
 
         [Route("GetInfo")]
