@@ -20,7 +20,7 @@ namespace Pc.Information.Api
             var builder = new ConfigurationBuilder()
                 .SetBasePath(env.ContentRootPath)
                 .AddJsonFile("appsettings.json", true, true)
-                .AddJsonFile($"appsettings.{env.EnvironmentName}.json", true);
+                .AddJsonFile($"appsettings.{env.EnvironmentName}.json", true,true);
 
             if (env.IsEnvironment("Development"))
             {
@@ -68,7 +68,8 @@ namespace Pc.Information.Api
             app.UseApplicationInsightsRequestTelemetry();
 
             app.UseApplicationInsightsExceptionTelemetry();
-
+            //异常处理中间件
+            app.UseMiddleware(typeof(ExceptionHandlerMiddleWare));
             app.UseMvc();
         }
     }
