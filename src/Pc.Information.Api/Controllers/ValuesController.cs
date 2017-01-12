@@ -6,6 +6,8 @@ using MailKit.Net.Smtp;
 using MailKit.Security;
 using Microsoft.AspNetCore.Mvc;
 using Pc.Information.Utility.Security;
+using Pc.Information.Utility.Web;
+using Pc.Information.Utility.DataConvert;
 
 namespace Pc.Information.Api.Controllers
 {
@@ -15,10 +17,7 @@ namespace Pc.Information.Api.Controllers
         [HttpGet]
         public IEnumerable<string> Get()
         {
-            var bo = IdCardValidatorHelper.CheckIdCard("051186524813654");
-            bo = IdCardValidatorHelper.CheckIdCard("500233199106077259");
-            bo = IdCardValidatorHelper.CheckIdCard("500233199106077258");
-            return new string[] { "value1", "value2" };
+            return new string[] { "value1","value2" };
         }
 
         // GET api/values/5
