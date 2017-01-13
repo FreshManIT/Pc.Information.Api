@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace Pc.Information.DataAccess.Common
+﻿namespace Pc.Information.DataAccess.Common
 {
     /// <summary>
     /// DataTable global
@@ -44,5 +39,10 @@ namespace Pc.Information.DataAccess.Common
         /// pifgroup table
         /// </summary>
         public static string PiFgroup = "pifgroup";
+
+        /// <summary>
+        /// PiFErrorLog table
+        /// </summary>
+        public static string PiFErrorLog = "PiFErrorLog";
     }
 }

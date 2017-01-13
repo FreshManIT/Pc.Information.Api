@@ -10,10 +10,30 @@ Target Server Type    : MYSQL
 Target Server Version : 50713
 File Encoding         : 65001
 
-Date: 2017-01-08 17:41:17
+Date: 2017-01-13 22:13:50
 */
 
 SET FOREIGN_KEY_CHECKS=0;
+
+-- ----------------------------
+-- Table structure for piferrorlog
+-- ----------------------------
+DROP TABLE IF EXISTS `piferrorlog`;
+CREATE TABLE `piferrorlog` (
+  `Id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `ContentType` varchar(255) DEFAULT NULL COMMENT 'Request contentType',
+  `ErrorMessage` varchar(255) DEFAULT NULL COMMENT 'error message',
+  `InnerErrorMessage` varchar(255) DEFAULT NULL COMMENT 'Inner message.',
+  `ErrorTypeFullName` varchar(255) DEFAULT NULL COMMENT 'Error type full name',
+  `StackTrace` varchar(255) DEFAULT NULL COMMENT 'Error stack trace',
+  `ErrorTime` datetime NOT NULL COMMENT 'product error time',
+  `ErrorTyp` int(11) NOT NULL COMMENT 'error type enum',
+  PRIMARY KEY (`Id`,`ErrorTime`,`ErrorTyp`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of piferrorlog
+-- ----------------------------
 
 -- ----------------------------
 -- Table structure for pifgroup
@@ -31,6 +51,10 @@ CREATE TABLE `pifgroup` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
+-- Records of pifgroup
+-- ----------------------------
+
+-- ----------------------------
 -- Table structure for pifgroupmember
 -- ----------------------------
 DROP TABLE IF EXISTS `pifgroupmember`;
@@ -43,6 +67,10 @@ CREATE TABLE `pifgroupmember` (
   `PiFUserId` int(11) DEFAULT '0' COMMENT '用户id',
   PRIMARY KEY (`Id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of pifgroupmember
+-- ----------------------------
 
 -- ----------------------------
 -- Table structure for pifinformationlog
@@ -60,6 +88,10 @@ CREATE TABLE `pifinformationlog` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
+-- Records of pifinformationlog
+-- ----------------------------
+
+-- ----------------------------
 -- Table structure for pifquestioninfo
 -- ----------------------------
 DROP TABLE IF EXISTS `pifquestioninfo`;
@@ -71,6 +103,10 @@ CREATE TABLE `pifquestioninfo` (
   `PiFSendUserId` int(11) DEFAULT NULL COMMENT '用户id',
   PRIMARY KEY (`Id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of pifquestioninfo
+-- ----------------------------
 
 -- ----------------------------
 -- Table structure for pifquestionreplyinfo
@@ -87,6 +123,10 @@ CREATE TABLE `pifquestionreplyinfo` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
+-- Records of pifquestionreplyinfo
+-- ----------------------------
+
+-- ----------------------------
 -- Table structure for pifreplypraisedinfo
 -- ----------------------------
 DROP TABLE IF EXISTS `pifreplypraisedinfo`;
@@ -100,18 +140,32 @@ CREATE TABLE `pifreplypraisedinfo` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
+-- Records of pifreplypraisedinfo
+-- ----------------------------
+
+-- ----------------------------
 -- Table structure for pifusers
 -- ----------------------------
 DROP TABLE IF EXISTS `pifusers`;
 CREATE TABLE `pifusers` (
   `Id` int(11) NOT NULL AUTO_INCREMENT,
   `PiFSex` int(11) DEFAULT '0' COMMENT '性别（0：女；1：男；2：其他）',
-  `PiFUserName` varchar(255) DEFAULT '' COMMENT '用户名',
+  `PiFUserName` varchar(255) NOT NULL DEFAULT '' COMMENT '用户名',
   `PiFPassword` varchar(255) DEFAULT '' COMMENT '用户密码',
   `PiFRule` int(255) DEFAULT '0' COMMENT '角色（0：普通用户；1：普通服务者；2：管理员）',
   `PiFJob` varchar(255) DEFAULT '' COMMENT '职业',
   `PiFEmailAddress` varchar(255) DEFAULT '' COMMENT '邮箱地址',
   `PiFBirthday` datetime DEFAULT NULL COMMENT '出生年月',
   `PiFRegisterTime` datetime DEFAULT NULL COMMENT '注册时间',
-  PRIMARY KEY (`Id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  PRIMARY KEY (`Id`,`PiFUserName`)
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of pifusers
+-- ----------------------------
+INSERT INTO `pifusers` VALUES ('1', '1', 'FreshMan', '1', '2', '高级软件工程师', 'qinbocai@sina.cn', '1991-06-07 12:22:52', '2017-01-08 12:23:17');
+INSERT INTO `pifusers` VALUES ('2', '0', 'PaiPai', '1', '1', '开发助理', 'chenlu@ly.com', '1995-06-23 00:00:00', '2017-01-08 12:23:17');
+INSERT INTO `pifusers` VALUES ('3', '1', 'qinbocai', '2', '2', '实习生', 'shi@ly.com', null, null);
+INSERT INTO `pifusers` VALUES ('4', '1', 'test', '1', '1', '测试工程师', 'qingzhan@gmail.com', '2000-12-09 00:00:00', '2017-01-12 00:00:00');
+INSERT INTO `pifusers` VALUES ('5', '1', 'langyuelei', 'langyuelei', '1', '前端开发助理', 'langyuelei@163.com', '1994-05-03 00:00:00', '2017-01-12 20:20:29');
+INSERT INTO `pifusers` VALUES ('6', '0', 'wangli', 'wangli', '1', '前端开发助理', 'wangli@163.com', '1994-05-02 00:00:00', '2017-01-12 20:20:29');
