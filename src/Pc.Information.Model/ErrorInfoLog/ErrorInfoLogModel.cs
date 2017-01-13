@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Pc.Information.Model.Enum;
 
 namespace Pc.Information.Model.ErrorInfoLog
@@ -18,6 +15,11 @@ namespace Pc.Information.Model.ErrorInfoLog
         {
             ErrorTime = DateTime.Now;
         }
+
+        /// <summary>
+        /// Primary key.
+        /// </summary>
+        public long Id { get; set; }
 
         /// <summary>
         /// Request contentType
