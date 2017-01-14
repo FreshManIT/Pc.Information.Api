@@ -3992,6 +3992,7 @@
         "type": "project",
         "framework": ".NETStandard,Version=v1.6",
         "dependencies": {
+          "Microsoft.AspNetCore.Http": "1.1.0",
           "NETStandard.Library": "1.6.0",
           "Pc.Information.Model": "1.0.0"
         },

@@ -19,6 +19,11 @@
         /// Email config model.
         /// </summary>
         public EmailServerConfigModel EmailServerConfig { get; set; }
+
+        /// <summary>
+        /// Error log cache key
+        /// </summary>
+        public CacheLogModel ErrorLogCache { get; set; }
     }
 
     /// <summary>
@@ -61,5 +66,21 @@
         /// Enalble secret password
         /// </summary>
         public bool PasswordEnabledSecret { get; set; }
+    }
+
+    /// <summary>
+    /// Error log cache model.
+    /// </summary>
+    public class CacheLogModel
+    {
+        /// <summary>
+        /// Cache key
+        /// </summary>
+        public string Cachekey { get; set; }
+
+        /// <summary>
+        /// Database number.
+        /// </summary>
+        public int DatabaseNumber { get; set; }
     }
 }

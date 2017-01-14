@@ -10,6 +10,8 @@ using Pc.Information.Api.MiddleWares;
 using Pc.Information.Interface.IUserInfoBll;
 using Pc.Information.Business.UserInfoBll;
 using Pc.Information.CoreModel;
+using Pc.Information.Interface.ILogHistoryBll;
+using Pc.Information.Business.LogHistoryBll;
 
 namespace Pc.Information.Api
 {
@@ -20,7 +22,7 @@ namespace Pc.Information.Api
             var builder = new ConfigurationBuilder()
                 .SetBasePath(env.ContentRootPath)
                 .AddJsonFile("appsettings.json", true, true)
-                .AddJsonFile($"appsettings.{env.EnvironmentName}.json", true,true);
+                .AddJsonFile($"appsettings.{env.EnvironmentName}.json", true, true);
 
             if (env.IsEnvironment("Development"))
             {
@@ -52,7 +54,9 @@ namespace Pc.Information.Api
             services.AddOptions();
             services.Configure<AppSettingsModel>(Configuration.GetSection("AppSettings"));
             //Add transiend
-            services.AddTransient<IUserInfoBll,UserInfoBll>();
+            services.AddTransient<IUserInfoBll, UserInfoBll>();
+            //Add Error log server
+            services.AddTransient<IErrorLogBll, ErrorLogBll>();
         }
 
         /// <summary>

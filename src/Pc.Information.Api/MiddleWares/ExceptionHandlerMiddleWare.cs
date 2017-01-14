@@ -2,6 +2,9 @@
 using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
+using Pc.Information.Business.LogHistoryBll;
+using Pc.Information.Interface.ILogHistoryBll;
+using Pc.Information.Interface.IUserInfoBll;
 using Pc.Information.Model.ErrorInfoLog;
 using Pc.Information.Utility.Cache;
 
@@ -17,13 +20,16 @@ namespace Pc.Information.Api.MiddleWares
         /// </summary>
         private readonly RequestDelegate _next;
 
+        private readonly IErrorLogBll _errorLogBll;
+
         /// <summary>
         /// construct function
         /// </summary>
         /// <param name="next"></param>
-        public ExceptionHandlerMiddleWare(RequestDelegate next)
+        public ExceptionHandlerMiddleWare(RequestDelegate next, IErrorLogBll errorLogBll)
         {
             _next = next;
+            _errorLogBll = errorLogBll;
         }
 
         /// <summary>
@@ -49,20 +55,16 @@ namespace Pc.Information.Api.MiddleWares
         /// <param name="context"></param>
         /// <param name="exception"></param>
         /// <returns></returns>
-        private static async Task HandleExceptionAsync(HttpContext context, Exception exception)
+        private async Task HandleExceptionAsync(HttpContext context, Exception exception)
         {
             if (exception == null) return;
             await WriteExceptionAsync(context, exception).ConfigureAwait(false);
         }
 
-        private static async Task WriteExceptionAsync(HttpContext context, Exception exception)
+        private async Task WriteExceptionAsync(HttpContext context, Exception exception)
         {
-            //记录日志
-            //LogHelper.Error(exception.GetBaseException().ToString());
-
-            var errorModel = new ErrorInfoLogModel { ContentType = context.Request.Headers["Accept"], ErrorMessage = exception?.Message, ErrorTime = DateTime.Now, ErrorTypeFullName = exception?.GetType().FullName, InnerErrorMessage = exception?.InnerException?.Message, StackTrace = exception?.StackTrace };
-            RedisCacheHelper.AddListAsync("ErrorList", errorModel, 1);
-
+            //记录错误
+            await _errorLogBll.WriteErrorInfo(exception, context);
             //返回友好的提示
             var response = context.Response;
 

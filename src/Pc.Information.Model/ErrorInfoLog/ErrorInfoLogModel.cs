@@ -52,8 +52,8 @@ namespace Pc.Information.Model.ErrorInfoLog
         public DateTime ErrorTime { get; set; }
 
         /// <summary>
-        /// 异常枚举类型
+        /// error type
         /// </summary>
-        public ErrorTypeEnum ErrorTyp { get; set; }
+        public int ErrorType { get; set; }
     }
 }
