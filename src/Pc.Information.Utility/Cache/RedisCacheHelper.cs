@@ -513,5 +513,38 @@ namespace Pc.Information.Utility.Cache
             return await cache.StringSetAsync(key, JsonConvert.SerializeObject(value), expiressRelative);
         }
         #endregion
+
+        #region [9、Get list count]
+
+        /// <summary>
+        /// Update set value.
+        /// </summary>
+        /// <param name="key">cache key</param>
+        /// <param name="databaseNumber">data base number,if -1 will get default database number,others need you base number range.</param>
+        /// <returns>Returns the length of the list stored at key. If key does not exist, it is interpreted as an empty list and 0 is returned.the length of the list at key.</returns>
+        public static long GetListLength(string key, int databaseNumber = -1)
+        {
+            CurrentDatabaseNumber = databaseNumber;
+            if (string.IsNullOrEmpty(key)) throw new ArgumentNullException(nameof(key));
+            var cache = Connection.GetDatabase(CurrentDatabaseNumber);
+            var length = cache.ListLength(key);
+            return length;
+        }
+
+        /// <summary>
+        /// Update set value.
+        /// </summary>
+        /// <param name="key">cache key</param>
+        /// <param name="databaseNumber">data base number,if -1 will get default database number,others need you base number range.</param>
+        /// <returns>Returns the length of the list stored at key. If key does not exist, it is interpreted as an empty list and 0 is returned.the length of the list at key.</returns>
+        public static async Task<long> GetListLengthAsync(string key, int databaseNumber = -1)
+        {
+            CurrentDatabaseNumber = databaseNumber;
+            if (string.IsNullOrEmpty(key)) throw new ArgumentNullException(nameof(key));
+            var cache = Connection.GetDatabase(CurrentDatabaseNumber);
+            var length = await cache.ListLengthAsync(key);
+            return length;
+        }
+        #endregion
     }
 }

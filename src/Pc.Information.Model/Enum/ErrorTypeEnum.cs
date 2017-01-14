@@ -21,7 +21,7 @@ namespace Pc.Information.Model.Enum
         /// 警告
         /// </summary>
         [Description("警告")]
-        warning=1,
+        Warning=1,
 
         /// <summary>
         /// 消息通知
