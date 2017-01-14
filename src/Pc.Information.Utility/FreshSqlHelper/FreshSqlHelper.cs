@@ -117,7 +117,7 @@ namespace Pc.Information.Utility.FreshSqlHelper
         public T FindOne<T>(string cmd, DynamicParameters param, bool flag = false, string connection = null) where T : class, new()
         {
             MySqlConnection con = FreshSqlConnectionHelper.GetConnection(connection);
-            var dataReader = con.QueryFirst<T>(cmd, param, commandType: flag ? CommandType.StoredProcedure : CommandType.Text);
+            var dataReader = con.QueryFirstOrDefault<T>(cmd, param, commandType: flag ? CommandType.StoredProcedure : CommandType.Text);
             return dataReader;
         }
 
@@ -133,7 +133,7 @@ namespace Pc.Information.Utility.FreshSqlHelper
         public async Task<T> FindOneAsync<T>(string cmd, DynamicParameters param, bool flag = false, string connection = null) where T : class, new()
         {
             MySqlConnection con = FreshSqlConnectionHelper.GetConnection(connection);
-            var dataReader = await con.QueryFirstAsync<T>(cmd, param, commandType: flag ? CommandType.StoredProcedure : CommandType.Text);
+            var dataReader = await con.QueryFirstOrDefaultAsync<T>(cmd, param, commandType: flag ? CommandType.StoredProcedure : CommandType.Text);
             return dataReader;
         }
         #endregion
