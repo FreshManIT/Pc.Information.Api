@@ -5,7 +5,6 @@ using System.Text;
 using System.Threading.Tasks;
 using Dapper;
 using MySql.Data.MySqlClient;
-using Pc.Information.Utility.Email;
 
 namespace Pc.Information.Utility.FreshSqlHelper
 {
@@ -279,6 +278,41 @@ namespace Pc.Information.Utility.FreshSqlHelper
             sql.Append($" {strWhere} ");
             sql.Append($" {orderBy} limit {pageSize} ");
             var tList = con.Query<T>(sql.ToString(), param, commandType: CommandType.Text);
+            return tList.ToList();
+        }
+
+        /// <summary>
+        /// Async search page data,high.e.g:long sqlint;
+        /// var param = new DynamicParameters();
+        /// param.Add("id",1);
+        /// var pagedata = fhelper.SearchPageList< PiFUsersModel />("pifusers", "and id=@id", null, "*", 0, 1, param, out sqlint);
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="tbName">table name</param>
+        /// <param name="strWhere">where case(begin and)</param>
+        /// <param name="orderBy">order filed</param>
+        /// <param name="fieldList">search field</param>
+        /// <param name="primaryKey">primary key for imporove speed</param>
+        /// <param name="pageIndex">page index</param>
+        /// <param name="pageSize">page size</param>
+        /// <param name="allCount">all count data row</param>
+        /// <param name="param">params</param>
+        /// <param name="connectionstring">connection database string.</param>
+        /// <returns></returns>
+        public async Task<IList<T>> SearchPageListHighAsync<T>(string tbName, string strWhere, string orderBy, string fieldList, string primaryKey, int pageIndex, int pageSize, DynamicParameters param, string connectionstring = null)
+        {
+            MySqlConnection con = FreshSqlConnectionHelper.GetConnection(connectionstring);
+            if (pageIndex < 1)
+            {
+                pageIndex = 1;
+            }
+            long startPageNum = (pageIndex - 1) * pageSize;
+            StringBuilder sql = new StringBuilder();
+            sql.Append("SELECT ");
+            sql.Append($" {fieldList} FROM {tbName} WHERE {primaryKey} < (SELECT {primaryKey} FROM {tbName} WHERE {strWhere} ORDER BY {primaryKey} desc LIMIT {startPageNum},1)");
+            sql.Append($" {strWhere} ");
+            sql.Append($" {orderBy} limit {pageSize} ");
+            var tList =await con.QueryAsync<T>(sql.ToString(), param, commandType: CommandType.Text);
             return tList.ToList();
         }
         #endregion
