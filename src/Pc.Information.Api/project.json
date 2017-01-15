@@ -20,8 +20,8 @@
         "Pc.Information.CoreModel": "1.0.0-*",
         "Pc.Information.Interface": "1.0.0-*",
         "Pc.Information.Model": "1.0.0-*",
-        "Pc.Information.Utility": "1.0.0-*"
-    },
+        "Pc.Information.Utility": "1.0.0-*",
+        "Swashbuckle": "6.0.0-beta902"    },
 
   "tools": {
     "Microsoft.AspNetCore.Server.IISIntegration.Tools": "1.0.0-preview2-final"
@@ -39,7 +39,8 @@
   "buildOptions": {
     "emitEntryPoint": true,
     "preserveCompilationContext": true,
-    "copyToOutput": "appsettings.json"
+    "copyToOutput": "appsettings.json",
+    "xmlDoc": true
   },
 
   "runtimeOptions": {

@@ -2,11 +2,7 @@
 using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
-using Pc.Information.Business.LogHistoryBll;
 using Pc.Information.Interface.ILogHistoryBll;
-using Pc.Information.Interface.IUserInfoBll;
-using Pc.Information.Model.ErrorInfoLog;
-using Pc.Information.Utility.Cache;
 
 namespace Pc.Information.Api.MiddleWares
 {

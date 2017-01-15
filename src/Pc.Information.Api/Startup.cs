@@ -12,11 +12,21 @@ using Pc.Information.Business.UserInfoBll;
 using Pc.Information.CoreModel;
 using Pc.Information.Interface.ILogHistoryBll;
 using Pc.Information.Business.LogHistoryBll;
+using System.IO;
+using Microsoft.Extensions.PlatformAbstractions;
+using Swashbuckle.Swagger.Model;
 
 namespace Pc.Information.Api
 {
+    /// <summary>
+    /// start up class
+    /// </summary>
     public class Startup
     {
+        /// <summary>
+        /// construct function
+        /// </summary>
+        /// <param name="env"></param>
         public Startup(IHostingEnvironment env)
         {
             var builder = new ConfigurationBuilder()
@@ -34,6 +44,9 @@ namespace Pc.Information.Api
             Configuration = builder.Build();
         }
 
+        /// <summary>
+        /// interface server
+        /// </summary>
         public IConfigurationRoot Configuration { get; }
 
         /// <summary>
@@ -57,6 +70,34 @@ namespace Pc.Information.Api
             services.AddTransient<IUserInfoBll, UserInfoBll>();
             //Add Error log server
             services.AddTransient<IErrorLogBll, ErrorLogBll>();
+            services.AddSwaggerGen();
+            //Add the detail information for the API.
+            services.ConfigureSwaggerGen(options =>
+            {
+                options.SingleApiVersion(new Info
+                {
+                    Version = "v1",
+                    Title = "PcInformation.Api",
+                    Description = "A simple example ASP.NET Core PcInformation.Api",
+                    TermsOfService = "None",
+                    Contact = new Contact { Name = "FreshMan", Email = "qinbocai@sina.cn", Url = "https://github.com/Yinghuochongxiaoq" },
+                    //License = new License { Name = "Use under LICX", Url = "http://url.com" }
+                });
+
+                //Determine base path for the application.
+                var basePath = PlatformServices.Default.Application.ApplicationBasePath;
+                System.Console.WriteLine(basePath);
+                //Set the comments path for the swagger json and ui.
+                options.IncludeXmlComments(basePath + "\\Pc.Information.Api.xml");
+                options.IncludeXmlComments(basePath + "\\Pc.Information.Business.xml");
+                options.IncludeXmlComments(basePath + "\\Pc.Information.CoreModel.xml");
+                options.IncludeXmlComments(basePath + "\\Pc.Information.DataAccess.xml");
+                options.IncludeXmlComments(basePath + "\\Pc.Information.Interface.xml");
+                options.IncludeXmlComments(basePath + "\\Pc.Information.Model.xml");
+                options.IncludeXmlComments(basePath + "\\Pc.Information.Utility.xml");
+                options.DescribeAllEnumsAsStrings();
+            });
+
         }
 
         /// <summary>
@@ -74,6 +115,8 @@ namespace Pc.Information.Api
             app.UseApplicationInsightsExceptionTelemetry();
             //异常处理中间件
             app.UseMiddleware(typeof(ExceptionHandlerMiddleWare));
+            app.UseSwagger();
+            app.UseSwaggerUi();
             app.UseMvc();
         }
     }
