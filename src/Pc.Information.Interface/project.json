@@ -1,15 +1,16 @@
 {
   "version": "1.0.0-*",
-
     "dependencies": {
         "Microsoft.AspNetCore.Http": "1.1.0",
         "NETStandard.Library": "1.6.0",
         "Pc.Information.Model": "1.0.0-*"
     },
-
-  "frameworks": {
-    "netstandard1.6": {
-      "imports": "dnxcore50"
+    "frameworks": {
+        "netstandard1.6": {
+            "imports": "dnxcore50"
+        }
+    },
+    "buildOptions": {
+        "xmlDoc": true
     }
-  }
 }

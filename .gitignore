@@ -28,3 +28,4 @@ _ReSharper*/
 [Tt]est[Rr]esult*
 .vs/config/applicationhost.config
 .vs/restore.dg
+publish/
