@@ -29,3 +29,5 @@ _ReSharper*/
 .vs/config/applicationhost.config
 .vs/restore.dg
 publish/
+src/Pc.Information.Api/Properties/PublishProfiles/Pc.Information.Api-publish.ps1
+src/Pc.Information.Api/Properties/PublishProfiles/Pc.Information.Api.pubxml
