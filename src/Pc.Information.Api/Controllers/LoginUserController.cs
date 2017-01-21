@@ -43,8 +43,6 @@ namespace Pc.Information.Api.Controllers
         public ApiResultModel<PiFUsersModel> Login(string userName, string password)
         {
             var info = UserInfoBll.GetUserInfo(userName, password);
-            var newUseInfo = new PiFUsersModel { PiFBirthday = new System.DateTime(1994, 5, 3), PiFEmailAddress = "langyuelei@163.com", PiFJob = "前端开发助理", PiFPassword = "langyuelei", PiFRegisterTime = System.DateTime.Now, PiFRule = 1, PiFSex = 1, PiFUserName = "langyuelei" };
-            var userId = UserInfoBll.UpdateUserInfo(newUseInfo);
             return ResponseDataApi(info);
         }
 
