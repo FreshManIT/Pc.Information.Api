@@ -24,6 +24,11 @@
         /// Error log cache key
         /// </summary>
         public CacheLogModel ErrorLogCache { get; set; }
+
+        /// <summary>
+        /// Chat history cache key
+        /// </summary>
+        public CacheLogModel ChatInfoHistoryCache { get; set; }
     }
 
     /// <summary>

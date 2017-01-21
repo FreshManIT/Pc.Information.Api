@@ -12,6 +12,9 @@ using Pc.Information.Utility.FreshSqlHelper;
 
 namespace Pc.Information.DataAccess.LogDataAccess
 {
+    /// <summary>
+    /// Log info data access
+    /// </summary>
     public class LogInfoDataAccess
     {
         /// <summary>
@@ -22,25 +25,25 @@ namespace Pc.Information.DataAccess.LogDataAccess
         public int AddLogInfo(ErrorInfoLogModel newLogInfo)
         {
             if (newLogInfo == null) return 0;
-            var searchSql = @"INSERT INTO piferrorlog (
-	ContentType,
-	ErrorMessage,
-	InnerErrorMessage,
-	ErrorTypeFullName,
-	StackTrace,
-	ErrorTime,
-	ErrorTyp
+            var searchSql = @"INSERT INTO piferrorlog(
+    ContentType,
+    ErrorMessage,
+    InnerErrorMessage,
+    ErrorTypeFullName,
+    StackTrace,
+    ErrorTime,
+    ErrorType
 )
 VALUES
-	(
-		@ContentType,
-		@ErrorMessage,
-		@InnerErrorMessage,
-		@ErrorTypeFullName,
-		@StackTrace,
-		@ErrorTime,
-		ErrorTyp
-	)";
+    (
+        @ContentType,
+        @ErrorMessage,
+        @InnerErrorMessage,
+        @ErrorTypeFullName,
+        @StackTrace,
+        @ErrorTime,
+        @ErrorType
+    )";
             var sqlHelper = new FreshSqlHelper();
             var param = new DynamicParameters(newLogInfo);
             var userId = sqlHelper.ExcuteNonQuery(searchSql, param);

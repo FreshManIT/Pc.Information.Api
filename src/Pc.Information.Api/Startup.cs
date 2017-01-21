@@ -70,6 +70,8 @@ namespace Pc.Information.Api
             services.AddTransient<IUserInfoBll, UserInfoBll>();
             //Add Error log server
             services.AddTransient<IErrorLogBll, ErrorLogBll>();
+            //Add ChatInfo history server
+            services.AddTransient<IInformationHistoryBll, InformationHistoryBll>();
             services.AddSwaggerGen();
             //Add the detail information for the API.
             services.ConfigureSwaggerGen(options =>
