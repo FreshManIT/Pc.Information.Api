@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using MailKit;
 using Newtonsoft.Json;
 using StackExchange.Redis;
 
@@ -544,6 +545,93 @@ namespace Pc.Information.Utility.Cache
             var cache = Connection.GetDatabase(CurrentDatabaseNumber);
             var length = await cache.ListLengthAsync(key);
             return length;
+        }
+        #endregion
+
+        #region [10、Remove list key-value]
+        /// <summary>
+        /// Remove value to list.no-expired
+        /// </summary>
+        /// <param name="key">cache key</param>
+        /// <param name="value">object value</param>
+        /// <param name="databaseNumber">data base number,if -1 will get default database number,others need you base number range.</param>
+        /// <returns>the number of removed elements.</returns>
+        public static long RemoveValueList(string key, object value, int databaseNumber = -1)
+        {
+            CurrentDatabaseNumber = databaseNumber;
+            if (string.IsNullOrEmpty(key)) throw new ArgumentNullException(nameof(key));
+            if (value == null) throw new ArgumentNullException(nameof(value));
+            var cache = Connection.GetDatabase(CurrentDatabaseNumber);
+            var length = cache.ListRemove(key, JsonConvert.SerializeObject(value));
+            return length;
+        }
+
+        /// <summary>
+        /// Remove value to list.no-expired
+        /// </summary>
+        /// <param name="key">cache key</param>
+        /// <param name="value">object value</param>
+        /// <param name="databaseNumber">data base number,if -1 will get default database number,others need you base number range.</param>
+        /// <returns>the number of removed elements.</returns>
+        public static async Task<long> RemoveValueListAsync(string key, object value, int databaseNumber = -1)
+        {
+            CurrentDatabaseNumber = databaseNumber;
+            if (string.IsNullOrEmpty(key)) throw new ArgumentNullException(nameof(key));
+            if (value == null) throw new ArgumentNullException(nameof(value));
+            var cache = Connection.GetDatabase(CurrentDatabaseNumber);
+            var length = await cache.ListRemoveAsync(key, JsonConvert.SerializeObject(value));
+            return length;
+        }
+        #endregion
+
+        #region [11、Get list range info]
+
+        /// <summary>
+        /// Get list range info.
+        /// </summary>
+        /// <typeparam name="T">type T</typeparam>
+        /// <param name="key">cache key</param>
+        /// <param name="start">start index,begin is zore.</param>
+        /// <param name="fail">the fail of list.</param>
+        /// <param name="databaseNumber">database number.</param>
+        /// <returns></returns>
+        public static List<T> GetListRange<T>(string key, long start = 0, long fail = -1, int databaseNumber = -1)
+        {
+            CurrentDatabaseNumber = databaseNumber;
+            if (string.IsNullOrEmpty(key)) throw new ArgumentNullException(nameof(key));
+            var cache = Connection.GetDatabase(CurrentDatabaseNumber);
+            var valueArray = cache.ListRange(key, start, fail);
+            var resulteList = new List<T>();
+            if (valueArray != null && valueArray.Any())
+            {
+                resulteList = valueArray.Select(f => JsonConvert.DeserializeObject<T>(f)).ToList();
+            }
+            return resulteList;
+        }
+
+        /// <summary>
+        /// Get list range info.
+        /// </summary>
+        /// <typeparam name="T">type T</typeparam>
+        /// <param name="key">cache key</param>
+        /// <param name="start">start index,begin is zore.</param>
+        /// <param name="fail">the fail of list.</param>
+        /// <param name="databaseNumber">database number.</param>
+        /// <returns></returns>
+        public static async Task<List<T>> GetListRangeAsync<T>(string key, long start = 0, long fail = -1, int databaseNumber = -1)
+        {
+            CurrentDatabaseNumber = databaseNumber;
+            if (string.IsNullOrEmpty(key)) throw new ArgumentNullException(nameof(key));
+            var cache = Connection.GetDatabase(CurrentDatabaseNumber);
+            var valueArray = await cache.ListRangeAsync(key, start, fail);
+            var resulteList = new List<T>();
+            if (valueArray != null && valueArray.Any())
+            {
+                resulteList =
+                    valueArray.Select(f => Task.Factory.StartNew(() => JsonConvert.DeserializeObject<T>(f)).Result)
+                        .ToList();
+            }
+            return resulteList;
         }
         #endregion
     }

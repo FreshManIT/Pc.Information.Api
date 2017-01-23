@@ -29,6 +29,11 @@
         /// Chat history cache key
         /// </summary>
         public CacheLogModel ChatInfoHistoryCache { get; set; }
+
+        /// <summary>
+        /// Online user cache.
+        /// </summary>
+        public CacheLogModel OnlineUserCache { get; set; }
     }
 
     /// <summary>

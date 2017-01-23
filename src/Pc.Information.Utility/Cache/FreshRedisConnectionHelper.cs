@@ -28,7 +28,6 @@ namespace Pc.Information.Utility.Cache
         /// <summary>
         /// Get single connection object
         /// </summary>
-        /// <param name="connectionString">you need new connection object.</param>
         /// <returns></returns>
         public static ConnectionMultiplexer GetConnection()
         {
