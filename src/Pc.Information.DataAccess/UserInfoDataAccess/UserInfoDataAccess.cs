@@ -41,7 +41,7 @@ namespace Pc.Information.DataAccess.UserInfoDataAccess
         }
 
         /// <summary>
-        /// search user info by username.
+        /// search user info by user id.
         /// </summary>
         /// <param name="userId"></param>
         /// <returns></returns>

@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using Pc.Information.Model.BaseModel;
 using Pc.Information.Model.User;
 
 namespace Pc.Information.Interface.IUserInfoBll
@@ -22,7 +21,7 @@ namespace Pc.Information.Interface.IUserInfoBll
         /// </summary>
         /// <param name="newUserInfoModel"></param>
         /// <returns></returns>
-        int AddUserInfo(PiFUsersModel newUserInfoModel);
+        DataBaseModel AddUserInfo(PiFUsersModel newUserInfoModel);
 
         /// <summary>
         /// Update user info.

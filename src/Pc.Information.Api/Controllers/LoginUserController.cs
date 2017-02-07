@@ -1,8 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Pc.Information.Interface.IUserInfoBll;
 using Pc.Information.Model.User;
 using Pc.Information.CoreModel;
+using Pc.Information.Model.BaseModel;
+using Pc.Information.Utility.DataConvert;
 
 namespace Pc.Information.Api.Controllers
 {
@@ -47,14 +50,33 @@ namespace Pc.Information.Api.Controllers
         }
 
         /// <summary>
-        /// Get user info by userid
+        /// Register user info.
         /// </summary>
+        /// <param name="userName">user name</param>
+        /// <param name="passWord">pass word</param>
+        /// <param name="emailAddress">email address</param>
+        /// <param name="sex">sex</param>
+        /// <param name="birthday">birthday</param>
+        /// <param name="ruleType">ruleType</param>
         /// <returns></returns>
         [HttpGet]
-        [Route("GetInfo")]
-        public string GetInfo()
+        [HttpPost]
+        [Route("RegisterUser")]
+        public ApiResultModel<DataBaseModel> GetRegisterUser(string userName, string passWord, string emailAddress, int sex = 0, string birthday = null, int ruleType = 0)
         {
-            return "Freshman";
+            var birthdayDate = DataTypeConvertHelper.ToDateTime(birthday);
+            var newUser = new PiFUsersModel
+            {
+                PiFSex = sex,
+                PiFUserName = userName,
+                PiFPassword = passWord,
+                PiFEmailAddress = emailAddress,
+                PiFBirthday = birthdayDate,
+                PiFRegisterTime = DateTime.Now,
+                PiFRule = ruleType
+            };
+            var resulteInfo = UserInfoBll.AddUserInfo(newUser);
+            return ResponseDataApi(resulteInfo);
         }
     }
 }

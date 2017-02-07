@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Pc.Information.Api.MiddleWares;
 
 namespace Pc.Information.Api.Controllers
 {
@@ -17,8 +16,7 @@ namespace Pc.Information.Api.Controllers
         /// <returns></returns>
         public ApiResultModel<T> ResponseDataApi<T>(T data)
         {
-            var resultData = new ApiResultModel<T>();
-            resultData.Data = data;
+            var resultData = new ApiResultModel<T> {Data = data};
             return resultData;
         }
     }

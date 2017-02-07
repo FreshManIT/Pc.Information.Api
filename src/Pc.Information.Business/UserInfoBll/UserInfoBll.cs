@@ -4,14 +4,16 @@ using System.Linq;
 using System.Threading.Tasks;
 using Pc.Information.DataAccess.UserInfoDataAccess;
 using Pc.Information.Interface.IUserInfoBll;
+using Pc.Information.Model.BaseModel;
 using Pc.Information.Model.User;
+using Pc.Information.Utility.Email;
 
 namespace Pc.Information.Business.UserInfoBll
 {
     /// <summary>
     /// User info business deal.
     /// </summary>
-    public class UserInfoBll: IUserInfoBll
+    public class UserInfoBll : IUserInfoBll
     {
         /// <summary>
         /// 数据访问对象
@@ -35,11 +37,27 @@ namespace Pc.Information.Business.UserInfoBll
         /// </summary>
         /// <param name="newUserInfoModel"></param>
         /// <returns></returns>
-        public int AddUserInfo(PiFUsersModel newUserInfoModel)
+        public DataBaseModel AddUserInfo(PiFUsersModel newUserInfoModel)
         {
-            if (newUserInfoModel == null) return 0;
+            var addResult = new DataBaseModel { StateCode = "0000" };
+            if (string.IsNullOrEmpty(newUserInfoModel?.PiFUserName) || string.IsNullOrEmpty(newUserInfoModel.PiFPassword) || !EmailHelper.IsEmailAddress(newUserInfoModel.PiFEmailAddress))
+            {
+                addResult.StateCode = "0001";
+                addResult.StateDesc = "Add info is Error";
+                return addResult;
+            }
+            var oldUseInfo = SearchUserInfoByUserName(newUserInfoModel.PiFUserName);
+            if (oldUseInfo != null)
+            {
+                addResult.StateCode = "0001";
+                addResult.StateDesc = "This username has being used.";
+                return addResult;
+            }
             var userId = _userInfoDataAccess.AddUserInfo(newUserInfoModel);
-            return userId;
+            addResult.StateCode = "0000";
+            addResult.StateDesc = userId.ToString();
+            EmailHelper.SendEmailAsync(newUserInfoModel.PiFEmailAddress, "New user register info.", "Thanks for you register FreshManChatSystem VIP.The next time we will push some interesting and useful info for you.");
+            return addResult;
         }
 
         /// <summary>
@@ -52,6 +70,18 @@ namespace Pc.Information.Business.UserInfoBll
             if (newUserInfoModel == null) return 0;
             var userId = _userInfoDataAccess.UpdateUserInfo(newUserInfoModel);
             return userId;
+        }
+
+        /// <summary>
+        /// Search user info by user name.
+        /// </summary>
+        /// <param name="userName">user name</param>
+        /// <returns>user info.</returns>
+        private PiFUsersModel SearchUserInfoByUserName(string userName)
+        {
+            if (string.IsNullOrEmpty(userName)) return null;
+            var userInfo = _userInfoDataAccess.GetUserInfoByUserName(userName);
+            return userInfo;
         }
     }
 }

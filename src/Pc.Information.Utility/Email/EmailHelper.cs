@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text.RegularExpressions;
 using MailKit.Net.Smtp;
 using MimeKit;
 using Pc.Information.CoreModel;
@@ -100,6 +101,17 @@ namespace Pc.Information.Utility.Email
                 await client.SendAsync(emailMessage).ConfigureAwait(false);
                 await client.DisconnectAsync(true).ConfigureAwait(false);
             }
+        }
+
+        /// <summary>
+        /// Chech email address.
+        /// </summary>
+        /// <param name="emailAddress">email address.</param>
+        /// <returns>this email address is valid.</returns>
+        public static bool IsEmailAddress(string emailAddress)
+        {
+            var regex = new Regex(@"^([\w-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$", RegexOptions.IgnoreCase);
+            return regex.IsMatch(emailAddress);
         }
     }
 }
