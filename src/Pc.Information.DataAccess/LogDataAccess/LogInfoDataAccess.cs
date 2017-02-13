@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 using Dapper;
 using Pc.Information.DataAccess.Common;
 using Pc.Information.Model.ErrorInfoLog;
-using Pc.Information.Model.User;
 using Pc.Information.Utility.FreshSqlHelper;
 
 namespace Pc.Information.DataAccess.LogDataAccess
