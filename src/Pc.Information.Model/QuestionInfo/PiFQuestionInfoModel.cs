@@ -12,6 +12,10 @@ namespace Pc.Information.Model.QuestionInfo
         /// </summary>
         public int Id { get; set; }
         /// <summary>
+        /// Question send user name
+        /// </summary>
+        public string PiFSendUserName { get; set; }
+        /// <summary>
         /// Question title
         /// </summary>
         public string PiFQuestionTitle { get; set; }

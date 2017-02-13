@@ -12,9 +12,10 @@ using Pc.Information.Business.UserInfoBll;
 using Pc.Information.CoreModel;
 using Pc.Information.Interface.ILogHistoryBll;
 using Pc.Information.Business.LogHistoryBll;
-using System.IO;
 using Microsoft.Extensions.PlatformAbstractions;
 using Swashbuckle.Swagger.Model;
+using Pc.Information.Interface.IQuestionBll;
+using Pc.Information.Business.QuestionBll;
 
 namespace Pc.Information.Api
 {
@@ -72,6 +73,8 @@ namespace Pc.Information.Api
             services.AddTransient<IErrorLogBll, ErrorLogBll>();
             //Add ChatInfo history server
             services.AddTransient<IInformationHistoryBll, InformationHistoryBll>();
+            //Add Question server info
+            services.AddTransient<IQuestionBll, QuestionBll>();
             services.AddSwaggerGen();
             //Add the detail information for the API.
             services.ConfigureSwaggerGen(options =>
