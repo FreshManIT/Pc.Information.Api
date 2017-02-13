@@ -77,8 +77,8 @@ WHERE
         {
             var strWhere = new StringBuilder();
             if (id > 1) strWhere.Append(" and Id=@id ");
-            if (startTime != default(DateTime)) strWhere.Append(" and PiFCreateTime>@startTime ");
-            if (endTime != default(DateTime)) strWhere.Append(" and PiFCreateTime<@endTime ");
+            if (startTime != default(DateTime) && startTime>new DateTime(1900,1,1)) strWhere.Append(" and PiFCreateTime>@startTime ");
+            if (endTime != default(DateTime) && endTime>new DateTime(1900,1,1)) strWhere.Append(" and PiFCreateTime<@endTime ");
             if (!string.IsNullOrEmpty(title)) strWhere.Append(" and PiFQuestionTitle like @PiFQuestionTitle ");
             var orderBy = " order by Id desc ";
             var fieldList = " * ";
