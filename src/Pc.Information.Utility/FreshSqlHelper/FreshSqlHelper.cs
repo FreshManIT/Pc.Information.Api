@@ -212,9 +212,12 @@ namespace Pc.Information.Utility.FreshSqlHelper
 
         /// <summary>
         /// search page data,slowly.e.g:long sqlint;
+        /// <mark>
+        /// 
         /// var param = new DynamicParameters();
         /// param.Add("id",1);
         /// var pagedata = fhelper.SearchPageList< PiFUsersModel />("pifusers", "and id=@id", null, "*", 0, 1, param, out sqlint);
+        /// </mark>
         /// </summary>
         /// <param name="tbName">table name</param>
         /// <param name="strWhere">where case</param>
@@ -244,10 +247,10 @@ namespace Pc.Information.Utility.FreshSqlHelper
 
         /// <summary>
         /// search page data,high.e.g:long sqlint;
+        /// </summary>
         /// var param = new DynamicParameters();
         /// param.Add("id",1);
-        /// var pagedata = fhelper.SearchPageList< PiFUsersModel />("pifusers", "and id=@id", null, "*", 0, 1, param, out sqlint);
-        /// </summary>
+        /// var pagedata = fhelper.SearchPageList<PiFUsersModel/>("pifusers", "and id=@id", null, "*", 0, 1, param, out sqlint);
         /// <typeparam name="T"></typeparam>
         /// <param name="tbName">table name</param>
         /// <param name="strWhere">where case(begin and)</param>
@@ -285,7 +288,7 @@ namespace Pc.Information.Utility.FreshSqlHelper
         /// Async search page data,high.e.g:long sqlint;
         /// var param = new DynamicParameters();
         /// param.Add("id",1);
-        /// var pagedata = fhelper.SearchPageList< PiFUsersModel />("pifusers", "and id=@id", null, "*", 0, 1, param, out sqlint);
+        /// var pagedata = fhelper.SearchPageList<PiFUsersModel/>("pifusers", "and id=@id", null, "*", 0, 1, param, out sqlint);
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="tbName">table name</param>
@@ -295,7 +298,6 @@ namespace Pc.Information.Utility.FreshSqlHelper
         /// <param name="primaryKey">primary key for imporove speed</param>
         /// <param name="pageIndex">page index</param>
         /// <param name="pageSize">page size</param>
-        /// <param name="allCount">all count data row</param>
         /// <param name="param">params</param>
         /// <param name="connectionstring">connection database string.</param>
         /// <returns></returns>
