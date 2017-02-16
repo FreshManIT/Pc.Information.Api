@@ -210,6 +210,22 @@ namespace Pc.Information.Utility.FreshSqlHelper
             return tList.ToList();
         }
 
+
+//        SELECT
+//    PiFQuestionId,
+
+//    Count(PiFQuestionId) AS ViewCount
+//FROM
+//    pifquestionviewInfo
+//WHERE 1=1 and
+//    PiFQuestionId IN(1, 2,3,4,5)
+//GROUP BY
+
+//    PiFQuestionId
+//ORDER BY
+//    ViewCount DESC
+//LIMIT 1, 1
+
         /// <summary>
         /// search page data,slowly.e.g:long sqlint;
         /// <mark>

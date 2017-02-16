@@ -35,5 +35,13 @@ namespace Pc.Information.Interface.IQuestionBll
         /// <returns></returns>
         List<PiFQuestionInfoModel> SearchQustionInfo(long id = 0, DateTime startTime = default(DateTime),
             DateTime endTime = default(DateTime), string title = null, int pageIndex = 1, int pageSize = 10);
+
+        /// <summary>
+        /// Add question view data.
+        /// </summary>
+        /// <param name="questionId">questionId</param>
+        /// <param name="userId">userId</param>
+        /// <returns></returns>
+        int AddQuestionViewInfo(int questionId, int userId);
     }
 }

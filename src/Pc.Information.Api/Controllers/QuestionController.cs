@@ -5,6 +5,8 @@ using System;
 using Pc.Information.Model.BaseModel;
 using System.Collections.Generic;
 using Pc.Information.Utility.DataConvert;
+using System.Linq;
+using Pc.Information.Interface.IQuestionReplyBll;
 
 namespace Pc.Information.Api.Controllers
 {
@@ -14,17 +16,24 @@ namespace Pc.Information.Api.Controllers
     public class QuestionController : BaseController
     {
         /// <summary>
-        /// Interface user info server.
+        /// Interface question info server.
         /// </summary>
         private IQuestionBll QuestionInfoBll { get; set; }
 
         /// <summary>
+        /// Interface question reply info server.
+        /// </summary>
+        private IQuestionReplyBll QuestionReplyBll { get; set; }
+
+        /// <summary>
         /// Constructed function.
         /// </summary>
-        /// <param name="userInfoBll"></param>
-        public QuestionController(IQuestionBll userInfoBll)
+        /// <param name="questionInfoBll">questionInfoBll</param>
+        /// <param name="questionReplyBll">questionReplyBll</param>
+        public QuestionController(IQuestionBll questionInfoBll, IQuestionReplyBll questionReplyBll)
         {
-            QuestionInfoBll = userInfoBll;
+            QuestionInfoBll = questionInfoBll;
+            QuestionReplyBll = questionReplyBll;
         }
 
         /// <summary>
@@ -46,6 +55,38 @@ namespace Pc.Information.Api.Controllers
             }
             newQuestionInfo.PiFCreateTime = DateTime.Now;
             var info = QuestionInfoBll.AddQuestionInfo(newQuestionInfo);
+            if (info < 1)
+            {
+                baseDataModel.StateCode = "1001";
+                baseDataModel.StateDesc = "Add faild.";
+            }
+            else
+            {
+                baseDataModel.StateCode = "0000";
+                baseDataModel.StateDesc = "Add Success.";
+            }
+            return ResponseDataApi(baseDataModel);
+        }
+
+        /// <summary>
+        /// Add new question view info.
+        /// </summary>
+        /// <param name="questionId">questionId</param>
+        /// <param name="userId">userId</param>
+        /// <returns></returns>
+        [HttpGet]
+        [HttpPost]
+        [Route("AddQuestionViewCount")]
+        public ApiResultModel<DataBaseModel> AddQuestionView(int questionId, int userId)
+        {
+            var baseDataModel = new DataBaseModel();
+            if (questionId < 1)
+            {
+                baseDataModel.StateCode = "1000";
+                baseDataModel.StateDesc = "Request data is invalid.";
+                return ResponseDataApi(baseDataModel);
+            }
+            var info = QuestionInfoBll.AddQuestionViewInfo(questionId, userId);
             if (info < 1)
             {
                 baseDataModel.StateCode = "1001";
@@ -103,12 +144,24 @@ namespace Pc.Information.Api.Controllers
         [HttpGet]
         [HttpPost]
         [Route("SearchQustionInfo")]
-        public ApiResultModel<List<PiFQuestionInfoModel>> SearchQustionInfo(long id = 0, string startTime = "1900-1-1", string endTime = "1900-1-1", string title = null, int pageIndex = 1, int pageSize = 10)
+        public ApiResultModel<List<PiFQuestionInfoWithReplyModel>> SearchQustionInfo(long id = 0, string startTime = "1900-1-1", string endTime = "1900-1-1", string title = null, int pageIndex = 1, int pageSize = 10)
         {
             var tStartTime = DataTypeConvertHelper.ToDateTime(startTime);
             var tTendTime = DataTypeConvertHelper.ToDateTime(endTime);
             var dataList = QuestionInfoBll.SearchQustionInfo(id, tStartTime, tTendTime, title, pageIndex, pageSize);
-            return ResponseDataApi(dataList);
+            var resulteQuestion = new List<PiFQuestionInfoWithReplyModel>();
+            if (dataList != null && dataList.Any())
+            {
+                dataList.ForEach(f =>
+                {
+                    var itemModel = new PiFQuestionInfoWithReplyModel { Id = f.Id, PiFCreateTime = f.PiFCreateTime, PiFQuestionContent = f.PiFQuestionContent, PiFQuestionTitle = f.PiFQuestionTitle, PiFSendUserId = f.PiFSendUserId, PiFSendUserName = f.PiFSendUserName };
+                    long countNubmer;
+                    itemModel.ReplyInfoList = QuestionReplyBll.GetReplyInfoList(out countNubmer, f.Id);
+                    itemModel.CountNumber = countNubmer;
+                    resulteQuestion.Add(itemModel);
+                });
+            }
+            return ResponseDataApi(resulteQuestion);
         }
     }
 }

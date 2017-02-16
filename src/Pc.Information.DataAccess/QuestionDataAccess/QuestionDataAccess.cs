@@ -23,7 +23,7 @@ namespace Pc.Information.DataAccess.QuestionDataAccess
         public int AddQuestionInfo(PiFQuestionInfoModel newQuestionInfo)
         {
             if (newQuestionInfo == null) return 0;
-            var searchSql = @"INSERT INTO pifquestioninfo (
+            var searchSql = string.Format(@"INSERT INTO {0} (
 	PiFQuestionTitle,
 	PiFQuestionContent,
 	PiFCreateTime,
@@ -37,7 +37,7 @@ VALUES
 		@PiFCreateTime,
 		@PiFSendUserId,
 		@PiFSendUserName
-	)";
+	)", DataTableGlobal.PiFquestioninfo);
             var sqlHelper = new FreshSqlHelper();
             var param = new DynamicParameters(newQuestionInfo);
             var id = sqlHelper.ExcuteNonQuery(searchSql, param);
@@ -52,11 +52,11 @@ VALUES
         public int UpdateQuestionInfo(PiFQuestionInfoModel newQuestionInfo)
         {
             if (newQuestionInfo == null || newQuestionInfo.Id < 1) return 0;
-            var searchSql = @"UPDATE pifquestioninfo
+            var searchSql = string.Format(@"UPDATE {0}
 SET PiFQuestionTitle =@PiFQuestionTitle,
  PiFQuestionContent =@PiFQuestionContent
 WHERE
-	Id =@Id";
+	Id =@Id", DataTableGlobal.PiFquestioninfo);
             var sqlHelper = new FreshSqlHelper();
             var param = new DynamicParameters(newQuestionInfo);
             var id = sqlHelper.ExcuteNonQuery(searchSql, param);
@@ -76,9 +76,9 @@ WHERE
         public List<PiFQuestionInfoModel> SearchQustionInfo(long id = 0, DateTime startTime = default(DateTime), DateTime endTime = default(DateTime), string title = null, int pageIndex = 1, int pageSize = 10)
         {
             var strWhere = new StringBuilder();
-            if (id > 1) strWhere.Append(" and Id=@id ");
-            if (startTime != default(DateTime) && startTime>new DateTime(1900,1,1)) strWhere.Append(" and PiFCreateTime>@startTime ");
-            if (endTime != default(DateTime) && endTime>new DateTime(1900,1,1)) strWhere.Append(" and PiFCreateTime<@endTime ");
+            if (id > 0) strWhere.Append(" and Id=@id ");
+            if (startTime != default(DateTime) && startTime > new DateTime(1900, 1, 1)) strWhere.Append(" and PiFCreateTime>@startTime ");
+            if (endTime != default(DateTime) && endTime > new DateTime(1900, 1, 1)) strWhere.Append(" and PiFCreateTime<@endTime ");
             if (!string.IsNullOrEmpty(title)) strWhere.Append(" and PiFQuestionTitle like @PiFQuestionTitle ");
             var orderBy = " order by Id desc ";
             var fieldList = " * ";
@@ -90,8 +90,50 @@ WHERE
             param.Add("endTime", endTime, DbType.DateTime);
             param.Add("PiFQuestionTitle", "%" + title + "%");
             var errorLogList = sqlHelper.SearchPageList<PiFQuestionInfoModel>(DataTableGlobal.PiFquestioninfo, strWhere.ToString(), orderBy,
-                fieldList, pageIndex, pageSize, param, out countNumber);
+                 fieldList, pageIndex, pageSize, param, out countNumber);
             return errorLogList.ToList();
+        }
+
+        /// <summary>
+        /// Add view question detail page data.
+        /// </summary>
+        /// <param name="questionId"></param>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        public int AddQuestionViewData(int questionId, int userId)
+        {
+            var newViewModel = new PiFQuestionViewInfoModel { PiFQuestionId = questionId, PiFUserId = userId, PiFVisitTime = DateTime.Now };
+            if (newViewModel == null || newViewModel.PiFQuestionId < 1) return 0;
+            var searchSql = string.Format(@"INSERT INTO {0} (
+	PiFQuestionId,
+	PiFUserId,
+	PiFVisitTime
+)
+VALUES
+	(
+		@PiFQuestionId,
+		@PiFUserId,
+		@PiFVisitTime
+	)", DataTableGlobal.PiFQuestionViewInfo);
+            var sqlHelper = new FreshSqlHelper();
+            var param = new DynamicParameters(newViewModel);
+            var id = sqlHelper.ExcuteNonQuery(searchSql, param);
+            return id;
+        }
+
+        /// <summary>
+        /// Get question view count
+        /// </summary>
+        /// <param name="questionId"></param>
+        /// <returns></returns>
+        public long GetQuestionViewNumber(int questionId)
+        {
+            if (questionId < 1) return 0;
+            var searchSql = string.Format(@"SELECT count(id) from {0} 
+where PiFQuestionId={1}", DataTableGlobal.PiFQuestionViewInfo,questionId);
+            var sqlHelper = new FreshSqlHelper();
+            var id = sqlHelper.ExcuteNonQuery(searchSql,null);
+            return id;
         }
     }
 }

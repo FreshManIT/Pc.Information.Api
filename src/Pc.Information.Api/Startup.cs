@@ -16,6 +16,8 @@ using Microsoft.Extensions.PlatformAbstractions;
 using Swashbuckle.Swagger.Model;
 using Pc.Information.Interface.IQuestionBll;
 using Pc.Information.Business.QuestionBll;
+using Pc.Information.Interface.IQuestionReplyBll;
+using Pc.Information.Business.QuestionReplyBll;
 
 namespace Pc.Information.Api
 {
@@ -75,6 +77,8 @@ namespace Pc.Information.Api
             services.AddTransient<IInformationHistoryBll, InformationHistoryBll>();
             //Add Question server info
             services.AddTransient<IQuestionBll, QuestionBll>();
+            //Add Question Reply server info
+            services.AddTransient<IQuestionReplyBll, QuestionReplyBll>();
             services.AddSwaggerGen();
             //Add the detail information for the API.
             services.ConfigureSwaggerGen(options =>

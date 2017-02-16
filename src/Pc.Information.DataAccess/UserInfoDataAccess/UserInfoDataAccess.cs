@@ -1,9 +1,13 @@
 ﻿using Dapper;
+using Pc.Information.DataAccess.Common;
 using Pc.Information.Model.User;
 using Pc.Information.Utility.FreshSqlHelper;
 
 namespace Pc.Information.DataAccess.UserInfoDataAccess
 {
+    /// <summary>
+    /// User info data access
+    /// </summary>
     public class UserInfoDataAccess
     {
         /// <summary>
@@ -15,7 +19,7 @@ namespace Pc.Information.DataAccess.UserInfoDataAccess
         public PiFUsersModel GetUserInfo(string userName, string password)
         {
             if (string.IsNullOrEmpty(userName) || string.IsNullOrEmpty(password)) return null;
-            var searchSql = "SELECT * from pifusers where PiFUserName=@PiFUserName and PiFPassword=@PiFPassword limit 1";
+            var searchSql = string.Format("SELECT * from {0} where PiFUserName=@PiFUserName and PiFPassword=@PiFPassword limit 1", DataTableGlobal.PiFUsers);
             var sqlHelper = new FreshSqlHelper();
             var param = new DynamicParameters();
             param.Add("PiFUserName", userName);
@@ -32,7 +36,7 @@ namespace Pc.Information.DataAccess.UserInfoDataAccess
         public PiFUsersModel GetUserInfoByUserName(string userName)
         {
             if (string.IsNullOrEmpty(userName)) return null;
-            var searchSql = "SELECT * from pifusers where PiFUserName=@PiFUserName limit 1";
+            var searchSql = string.Format("SELECT * from {0} where PiFUserName=@PiFUserName limit 1", DataTableGlobal.PiFUsers);
             var sqlHelper = new FreshSqlHelper();
             var param = new DynamicParameters();
             param.Add("PiFUserName", userName);
@@ -48,7 +52,7 @@ namespace Pc.Information.DataAccess.UserInfoDataAccess
         public PiFUsersModel GetUserInfoByUserId(int userId)
         {
             if (userId<1) return null;
-            var searchSql = "SELECT * from pifusers where Id=@userId limit 1";
+            var searchSql = string.Format("SELECT * from {0} where Id=@userId limit 1", DataTableGlobal.PiFUsers);
             var sqlHelper = new FreshSqlHelper();
             var param = new DynamicParameters();
             param.Add("userId", userId);
@@ -57,14 +61,14 @@ namespace Pc.Information.DataAccess.UserInfoDataAccess
         }
 
         /// <summary>
-        /// 添加新用户
+        /// Add new user
         /// </summary>
         /// <param name="newUserInfo"></param>
         /// <returns></returns>
         public int AddUserInfo(PiFUsersModel newUserInfo)
         {
                 if (newUserInfo==null) return 0;
-                var searchSql = @"INSERT INTO pifusers (
+                var searchSql = string.Format(@"INSERT INTO {0} (
 	PiFSex,
 	PiFUserName,
 	PiFPassword,
@@ -84,7 +88,7 @@ VALUES
 	@PiFEmailAddress,
 	@PiFBirthday,
 	@PiFRegisterTime
-	)";
+	)", DataTableGlobal.PiFUsers);
                 var sqlHelper = new FreshSqlHelper();
                 var param = new DynamicParameters(newUserInfo);
                 var userId = sqlHelper.ExcuteNonQuery(searchSql, param);
@@ -99,12 +103,12 @@ VALUES
         public int UpdateUserInfo(PiFUsersModel newuserInfo)
         {
             if (newuserInfo == null) return 0;
-            var searchSql = @"UPDATE pifusers SET	PiFSex=@PiFSex,
+            var searchSql = string.Format(@"UPDATE {0} SET	PiFSex=@PiFSex,
 	PiFRule=@PiFRule,
 	PiFJob=@PiFJob,
 	PiFEmailAddress=@PiFEmailAddress,
 	PiFBirthday=@PiFBirthday 
-where PiFUserName=@PiFUserName and PiFPassword=@PiFPassword";
+where PiFUserName=@PiFUserName and PiFPassword=@PiFPassword", DataTableGlobal.PiFUsers);
             var sqlHelper = new FreshSqlHelper();
             var param = new DynamicParameters(newuserInfo);
             var userId = sqlHelper.ExcuteNonQuery(searchSql, param);

@@ -8,6 +8,13 @@ namespace Pc.Information.Model.QuestionInfo
     public class PiFQuestionReplyInfoModel
     {
         /// <summary>
+        /// Struct function
+        /// </summary>
+        public PiFQuestionReplyInfoModel()
+        {
+            PiFReplyIsBest = -1;
+        }
+        /// <summary>
         /// Reply id
         /// </summary>
         public int Id { get; set; }
@@ -20,7 +27,7 @@ namespace Pc.Information.Model.QuestionInfo
         /// </summary>
         public string PiFReplyContent { get; set; }
         /// <summary>
-        /// Is best reply.1:yes;0:no(default)
+        /// Is best reply.1:yes;0:no(default value is -1)
         /// </summary>
         public int PiFReplyIsBest { get; set; }
         /// <summary>
@@ -31,5 +38,10 @@ namespace Pc.Information.Model.QuestionInfo
         /// Reply user id.
         /// </summary>
         public int PiFReplyUserId { get; set; }
+
+        /// <summary>
+        /// Reply user name
+        /// </summary>
+        public string PiFuserName { get; set; }
     }
 }

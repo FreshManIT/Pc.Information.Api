@@ -44,5 +44,10 @@
         /// PiFErrorLog table
         /// </summary>
         public static string PiFErrorLog = "PiFErrorLog";
+
+        /// <summary>
+        /// PiFQuestionViewInfo table
+        /// </summary>
+        public static string PiFQuestionViewInfo = "PiFQuestionViewInfo";
     }
 }

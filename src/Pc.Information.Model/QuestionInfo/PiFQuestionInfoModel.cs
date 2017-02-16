@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Pc.Information.Model.QuestionInfo
 {
@@ -31,5 +32,29 @@ namespace Pc.Information.Model.QuestionInfo
         /// Creat question uer id
         /// </summary>
         public int PiFSendUserId { get; set; }
+    }
+
+    /// <summary>
+    /// with reply info model list
+    /// </summary>
+    public class PiFQuestionInfoWithReplyModel : PiFQuestionInfoModel
+    {
+        /// <summary>
+        /// Struct function
+        /// </summary>
+        public PiFQuestionInfoWithReplyModel():base()
+        {
+            ReplyInfoList = new List<PiFQuestionReplyInfoModel>();
+        }
+
+        /// <summary>
+        /// Question info list
+        /// </summary>
+        public List<PiFQuestionReplyInfoModel> ReplyInfoList { get; set; }
+
+        /// <summary>
+        /// All count reply number.
+        /// </summary>
+        public long CountNumber { get; set; }
     }
 }

@@ -22,6 +22,17 @@ namespace Pc.Information.Business.QuestionBll
         }
 
         /// <summary>
+        /// Add view question info.
+        /// </summary>
+        /// <param name="questionId"></param>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        public int AddQuestionViewInfo(int questionId,int userId)
+        {
+            return new QuestionDataAccess().AddQuestionViewData(questionId, userId);
+        }
+
+        /// <summary>
         /// Updata question info.
         /// </summary>
         /// <param name="newQuestionInfo"></param>
