@@ -43,5 +43,19 @@ namespace Pc.Information.Interface.IQuestionBll
         /// <param name="userId">userId</param>
         /// <returns></returns>
         int AddQuestionViewInfo(int questionId, int userId);
+
+        /// <summary>
+        /// get hot reply question list.
+        /// </summary>
+        /// <param name="number">number</param>
+        /// <returns></returns>
+        List<PiFQuestionInfoWithReplyModel> GetHotReplyQuestionInfo(int number = 10);
+
+        /// <summary>
+        /// GetHotViewQuestionInfo
+        /// </summary>
+        /// <param name="number">number</param>
+        /// <returns></returns>
+        List<PiFQuestionInfoWithReplyModel> GetHotViewQuestionInfo(int number = 10);
     }
 }

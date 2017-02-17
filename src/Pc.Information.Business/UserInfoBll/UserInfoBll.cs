@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Pc.Information.DataAccess.UserInfoDataAccess;
+﻿using Pc.Information.DataAccess.UserInfoDataAccess;
 using Pc.Information.Interface.IUserInfoBll;
 using Pc.Information.Model.BaseModel;
 using Pc.Information.Model.User;
 using Pc.Information.Utility.Email;
+using Pc.Information.Utility.Security;
 
 namespace Pc.Information.Business.UserInfoBll
 {
@@ -28,6 +25,8 @@ namespace Pc.Information.Business.UserInfoBll
         /// <returns></returns>
         public PiFUsersModel GetUserInfo(string username, string password)
         {
+            if (string.IsNullOrEmpty(password)) return null;
+            password = DesHelper.DesEnCode(password);
             var info = _userInfoDataAccess.GetUserInfo(username, password);
             return info;
         }
@@ -46,6 +45,7 @@ namespace Pc.Information.Business.UserInfoBll
                 addResult.StateDesc = "Add info is Error";
                 return addResult;
             }
+            newUserInfoModel.PiFPassword = DesHelper.DesEnCode(newUserInfoModel.PiFPassword);
             var oldUseInfo = SearchUserInfoByUserName(newUserInfoModel.PiFUserName);
             if (oldUseInfo != null)
             {

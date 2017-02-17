@@ -32,6 +32,11 @@ namespace Pc.Information.Model.QuestionInfo
         /// Creat question uer id
         /// </summary>
         public int PiFSendUserId { get; set; }
+
+        /// <summary>
+        /// View count
+        /// </summary>
+        public int? ViewCount { get; set;}
     }
 
     /// <summary>
@@ -42,7 +47,7 @@ namespace Pc.Information.Model.QuestionInfo
         /// <summary>
         /// Struct function
         /// </summary>
-        public PiFQuestionInfoWithReplyModel():base()
+        public PiFQuestionInfoWithReplyModel() : base()
         {
             ReplyInfoList = new List<PiFQuestionReplyInfoModel>();
         }
@@ -56,5 +61,21 @@ namespace Pc.Information.Model.QuestionInfo
         /// All count reply number.
         /// </summary>
         public long CountNumber { get; set; }
+    }
+
+    /// <summary>
+    /// Question view count
+    /// </summary>
+    public class PiFQuestionViewCountInfoModel
+    {
+        /// <summary>
+        /// Question id
+        /// </summary>
+        public int PiFQuestionId { get; set; }
+
+        /// <summary>
+        /// View count
+        /// </summary>
+        public int ViewCount { get; set; }
     }
 }

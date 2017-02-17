@@ -187,15 +187,13 @@ namespace Pc.Information.Utility.FreshSqlHelper
         /// <param name="pageSize">page size</param>
         /// <param name="param">params.</param>
         /// <param name="allCount">all count number.</param>
+        /// <param name="groupby">group by</param>
         /// <param name="connectionstring">connection string.</param>
         /// <returns>page data</returns>
-        public IList<T> SearchPageList<T>(string tbName, string strWhere, string orderBy, string fieldList, int pageIndex, int pageSize, DynamicParameters param, out long allCount, string connectionstring = null) where T : class, new()
+        public IList<T> SearchPageList<T>(string tbName, string strWhere, string orderBy, string fieldList, int pageIndex, int pageSize, DynamicParameters param, out long allCount, string groupby = null, string connectionstring = null) where T : class, new()
         {
             MySqlConnection con = FreshSqlConnectionHelper.GetConnection(connectionstring);
-            //Search count.
-            var searchCountStr = $"SELECT COUNT(*) as dataCount from {tbName}  where 1=1 {strWhere}";
-            var dataCount = con.ExecuteScalar(searchCountStr, param);
-            allCount = (long)dataCount;
+            allCount = 0;
             if (pageIndex < 1)
             {
                 pageIndex = 1;
@@ -204,27 +202,17 @@ namespace Pc.Information.Utility.FreshSqlHelper
             StringBuilder sql = new StringBuilder();
             sql.Append("SELECT ");
             sql.Append($" {fieldList} FROM {tbName} WHERE 1=1 {strWhere} ");
+            if (!string.IsNullOrEmpty(groupby))
+            {
+                sql.AppendFormat(" Group by {0} ", groupby);
+            }
             sql.Append($" {orderBy} limit {startPageNum} ");
             sql.Append($",{pageSize} ");
             var tList = con.Query<T>(sql.ToString(), param, commandType: CommandType.Text);
+            con.Close();
+            con.Dispose();
             return tList.ToList();
         }
-
-
-//        SELECT
-//    PiFQuestionId,
-
-//    Count(PiFQuestionId) AS ViewCount
-//FROM
-//    pifquestionviewInfo
-//WHERE 1=1 and
-//    PiFQuestionId IN(1, 2,3,4,5)
-//GROUP BY
-
-//    PiFQuestionId
-//ORDER BY
-//    ViewCount DESC
-//LIMIT 1, 1
 
         /// <summary>
         /// search page data,slowly.e.g:long sqlint;
@@ -279,12 +267,12 @@ namespace Pc.Information.Utility.FreshSqlHelper
         /// <param name="param">params</param>
         /// <param name="connectionstring">connection database string.</param>
         /// <returns></returns>
-        public IList<T> SearchPageListHigh<T>(string tbName, string strWhere, string orderBy, string fieldList, string primaryKey, int pageIndex, int pageSize,out long allCount, DynamicParameters param, string connectionstring = null)
+        public IList<T> SearchPageListHigh<T>(string tbName, string strWhere, string orderBy, string fieldList, string primaryKey, int pageIndex, int pageSize, out long allCount, DynamicParameters param, string connectionstring = null)
         {
             MySqlConnection con = FreshSqlConnectionHelper.GetConnection(connectionstring);
             //Search count.
             var searchCountStr = $"SELECT COUNT({primaryKey}) as dataCount from {tbName}  where 1=1 {strWhere}";
-            var dataCount =con.ExecuteScalar(searchCountStr, param);
+            var dataCount = con.ExecuteScalar(searchCountStr, param);
             allCount = (long)dataCount;
             if (pageIndex < 1)
             {
@@ -330,7 +318,7 @@ namespace Pc.Information.Utility.FreshSqlHelper
             sql.Append($" {fieldList} FROM {tbName} WHERE {primaryKey} < (SELECT {primaryKey} FROM {tbName} WHERE {strWhere} ORDER BY {primaryKey} desc LIMIT {startPageNum},1)");
             sql.Append($" {strWhere} ");
             sql.Append($" {orderBy} limit {pageSize} ");
-            var tList =await con.QueryAsync<T>(sql.ToString(), param, commandType: CommandType.Text);
+            var tList = await con.QueryAsync<T>(sql.ToString(), param, commandType: CommandType.Text);
             return tList.ToList();
         }
         #endregion

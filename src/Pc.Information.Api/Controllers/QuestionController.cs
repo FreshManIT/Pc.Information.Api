@@ -154,7 +154,7 @@ namespace Pc.Information.Api.Controllers
             {
                 dataList.ForEach(f =>
                 {
-                    var itemModel = new PiFQuestionInfoWithReplyModel { Id = f.Id, PiFCreateTime = f.PiFCreateTime, PiFQuestionContent = f.PiFQuestionContent, PiFQuestionTitle = f.PiFQuestionTitle, PiFSendUserId = f.PiFSendUserId, PiFSendUserName = f.PiFSendUserName };
+                    var itemModel = new PiFQuestionInfoWithReplyModel { Id = f.Id, PiFCreateTime = f.PiFCreateTime, PiFQuestionContent = f.PiFQuestionContent, PiFQuestionTitle = f.PiFQuestionTitle, PiFSendUserId = f.PiFSendUserId, PiFSendUserName = f.PiFSendUserName, ViewCount = f.ViewCount ?? 0 };
                     long countNubmer;
                     itemModel.ReplyInfoList = QuestionReplyBll.GetReplyInfoList(out countNubmer, f.Id);
                     itemModel.CountNumber = countNubmer;
@@ -162,6 +162,32 @@ namespace Pc.Information.Api.Controllers
                 });
             }
             return ResponseDataApi(resulteQuestion);
+        }
+
+        /// <summary>
+        /// GetHotReplyQuestionInfo
+        /// </summary>
+        /// <returns></returns>
+        [Route("GetHotReplyQuestionInfo")]
+        [HttpGet]
+        [HttpPost]
+        public ApiResultModel<List<PiFQuestionInfoWithReplyModel>> GetHotReplyQuestionInfo()
+        {
+            var resulteList = QuestionInfoBll.GetHotReplyQuestionInfo();
+            return ResponseDataApi(resulteList);
+        }
+
+        /// <summary>
+        /// GetHotReplyQuestionInfo
+        /// </summary>
+        /// <returns></returns>
+        [Route("GetHotViewQuestionInfo")]
+        [HttpGet]
+        [HttpPost]
+        public ApiResultModel<List<PiFQuestionInfoWithReplyModel>> GetHotViewQuestionInfo()
+        {
+            var resulteList = QuestionInfoBll.GetHotViewQuestionInfo();
+            return ResponseDataApi(resulteList);
         }
     }
 }

@@ -42,6 +42,7 @@ namespace Pc.Information.Api.Controllers
         /// <param name="password">password</param>
         /// <returns></returns>
         [HttpGet]
+        [HttpPost]
         [Route("Login")]
         public ApiResultModel<PiFUsersModel> Login(string userName, string password)
         {
