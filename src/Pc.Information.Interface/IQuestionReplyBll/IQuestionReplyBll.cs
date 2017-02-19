@@ -31,5 +31,13 @@ namespace Pc.Information.Interface.IQuestionReplyBll
         /// <param name="pageSize">pageSize</param>
         /// <returns></returns>
         List<PiFQuestionReplyInfoModel> GetReplyInfoList(out long countNumber,int questionId = 0, string likeContent = null, DateTime? startTime = null, DateTime? endTime = null, int userId = 0, int pageIndex = 1, int pageSize = 10);
+
+        /// <summary>
+        /// add reply praised info
+        /// </summary>
+        /// <param name="userId">user id</param>
+        /// <param name="replyId">reply id</param>
+        /// <returns></returns>
+       int AddReplyPraised(int replyId, int userId);
     }
 }
