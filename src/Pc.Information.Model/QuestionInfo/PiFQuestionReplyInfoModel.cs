@@ -43,5 +43,15 @@ namespace Pc.Information.Model.QuestionInfo
         /// Reply user name
         /// </summary>
         public string PiFuserName { get; set; }
+
+        /// <summary>
+        /// Hase praised.
+        /// </summary>
+        public int HasePraise { get; set; }
+
+        /// <summary>
+        /// Praise number.
+        /// </summary>
+        public int PraisedNumber { get; set; }
     }
 }

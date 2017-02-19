@@ -27,7 +27,7 @@ namespace Pc.Information.DataAccess.ReplyDataAccess
         /// <param name="pageIndex">pageIndex</param>
         /// <param name="pageSize">pageSize</param>
         /// <returns></returns>
-        public List<PiFQuestionReplyInfoModel> GetReplyInfoList(out long countNumber,int questionId = 0, string likeContent = null, DateTime? startTime = null, DateTime? endTime = null, int userId = 0, int pageIndex = 1, int pageSize = 10)
+        public List<PiFQuestionReplyInfoModel> GetReplyInfoList(out long countNumber, int questionId = 0, string likeContent = null, DateTime? startTime = null, DateTime? endTime = null, int userId = 0, int pageIndex = 1, int pageSize = 10)
         {
             var strWhere = new StringBuilder(" and reply.PiFReplyUserId = users.Id ");
             if (questionId > 0) strWhere.Append(" and reply.PiFQuestionId=@id ");
@@ -35,14 +35,31 @@ namespace Pc.Information.DataAccess.ReplyDataAccess
             if (endTime != null && endTime != default(DateTime) && endTime > new DateTime(1900, 1, 1)) strWhere.Append(" and PiFReplyTime<@endTime ");
             if (!string.IsNullOrEmpty(likeContent)) strWhere.Append(" and PiFReplyContent like @PiFReplyContent ");
             var orderBy = " order by Id desc ";
-            var fieldList = " reply.*, users.PiFUserName ";
+            var fieldList = string.Format(@" reply.*, users.PiFUserName ,
+    (
+        SELECT
+            count(*)
+        FROM
+            {0}
+        WHERE
+            {0}.PiFReplyId = reply.Id
+    ) AS PraisedNumber,
+    (
+        SELECT
+            COUNT(*)
+        FROM
+            {0}
+        WHERE
+            {0}.PiFReplyId = reply.Id
+        AND {0}.PiFUerId = {1}
+	) AS HasePraise ", DataTableGlobal.PiFreplypraisedinfo,userId);
             var sqlHelper = new FreshSqlHelper();
             var param = new DynamicParameters();
             param.Add("id", questionId);
             param.Add("startTime", startTime, DbType.DateTime);
             param.Add("endTime", endTime, DbType.DateTime);
             param.Add("PiFReplyContent", "%" + likeContent + "%");
-            var errorLogList = sqlHelper.SearchPageList<PiFQuestionReplyInfoModel>(DataTableGlobal.PiFquestionreplyinfo + " reply,"+DataTableGlobal.PiFUsers +" users " , strWhere.ToString(), orderBy,
+            var errorLogList = sqlHelper.SearchPageList<PiFQuestionReplyInfoModel>(DataTableGlobal.PiFquestionreplyinfo + " reply," + DataTableGlobal.PiFUsers + " users ", strWhere.ToString(), orderBy,
                 fieldList, pageIndex, pageSize, param, out countNumber);
             return errorLogList.ToList();
         }
@@ -74,6 +91,56 @@ VALUES
             var param = new DynamicParameters(newReplyInfo);
             var userId = sqlHelper.ExcuteNonQuery(searchSql, param);
             return userId;
+        }
+
+        /// <summary>
+        /// Add reply info
+        /// </summary>
+        /// <param name="replyPraisedModel">reply praised model</param>
+        /// <returns></returns>
+        public int AddReplyPraised(PiFReplyPraisedInfoModel replyPraisedModel)
+        {
+            if (replyPraisedModel == null || replyPraisedModel.PiFReplyId < 1 || replyPraisedModel.PiFUerId < 1) return 0;
+            var searchSql = string.Format(@"INSERT INTO {0} (
+	PiFUerId,
+	PiFPraisedTime,
+	PiFReplyId,
+	PiFPraisedType
+)
+VALUES
+	(
+		@PiFUerId,
+		@PiFPraisedTime,
+		@PiFReplyId,
+		@PiFPraisedType
+	)", DataTableGlobal.PiFreplypraisedinfo);
+            var sqlHelper = new FreshSqlHelper();
+            var param = new DynamicParameters(replyPraisedModel);
+            var id = sqlHelper.ExcuteNonQuery(searchSql, param);
+            return id;
+        }
+
+        /// <summary>
+        /// Get praised data.
+        /// </summary>
+        /// <param name="replyId"></param>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        public List<PiFReplyPraisedInfoModel> GetPraisedInList(int replyId, int userId)
+        {
+            if (replyId < 1 && userId < 1) return null;
+            var searchSql = new StringBuilder();
+            searchSql.AppendFormat(@"SELECT
+	* 
+FROM 
+	{0} 
+WHERE 
+	1 = 1 ", DataTableGlobal.PiFreplypraisedinfo);
+            if (replyId > 0) searchSql.AppendFormat(@" AND PiFReplyId = {0} ", replyId);
+            if (userId > 0) searchSql.AppendFormat(@" AND PiFUerId = {0} ", userId);
+            var sqlHelper = new FreshSqlHelper();
+            var resulteList = sqlHelper.FindToList<PiFReplyPraisedInfoModel>(searchSql.ToString(), null);
+            return resulteList.ToList();
         }
     }
 }

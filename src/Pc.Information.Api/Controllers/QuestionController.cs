@@ -140,11 +140,12 @@ namespace Pc.Information.Api.Controllers
         /// <param name="title">Fuzzy search word</param>
         /// <param name="pageIndex">page index</param>
         /// <param name="pageSize">pagesize</param>
+        /// <param name="userId">user id</param>
         /// <returns></returns>
         [HttpGet]
         [HttpPost]
         [Route("SearchQustionInfo")]
-        public ApiResultModel<List<PiFQuestionInfoWithReplyModel>> SearchQustionInfo(long id = 0, string startTime = "1900-1-1", string endTime = "1900-1-1", string title = null, int pageIndex = 1, int pageSize = 10)
+        public ApiResultModel<List<PiFQuestionInfoWithReplyModel>> SearchQustionInfo(long id = 0, string startTime = "1900-1-1", string endTime = "1900-1-1", string title = null, int pageIndex = 1, int pageSize = 10, int userId = 0)
         {
             var tStartTime = DataTypeConvertHelper.ToDateTime(startTime);
             var tTendTime = DataTypeConvertHelper.ToDateTime(endTime);
@@ -156,7 +157,7 @@ namespace Pc.Information.Api.Controllers
                 {
                     var itemModel = new PiFQuestionInfoWithReplyModel { Id = f.Id, PiFCreateTime = f.PiFCreateTime, PiFQuestionContent = f.PiFQuestionContent, PiFQuestionTitle = f.PiFQuestionTitle, PiFSendUserId = f.PiFSendUserId, PiFSendUserName = f.PiFSendUserName, ViewCount = f.ViewCount ?? 0 };
                     long countNubmer;
-                    itemModel.ReplyInfoList = QuestionReplyBll.GetReplyInfoList(out countNubmer, f.Id);
+                    itemModel.ReplyInfoList = QuestionReplyBll.GetReplyInfoList(out countNubmer, f.Id, userId: userId);
                     itemModel.CountNumber = countNubmer;
                     resulteQuestion.Add(itemModel);
                 });

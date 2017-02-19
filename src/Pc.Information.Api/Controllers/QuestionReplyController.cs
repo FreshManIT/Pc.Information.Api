@@ -61,5 +61,22 @@ namespace Pc.Information.Api.Controllers
             }
             return ResponseDataApi(baseDataModel);
         }
+
+        /// <summary>
+        /// Add prised info
+        /// </summary>
+        /// <param name="replyId">reply id</param>
+        /// <param name="userId">user id</param>
+        /// <returns></returns>
+        [HttpPost]
+        [HttpGet]
+        [Route("AddReplyPraised")]
+        public ApiResultModel<DataBaseModel> AddReplyPraised(int replyId, int userId)
+        {
+            var messageList = new List<string> { "Params is error.", "Success.", "You have Praised." };
+            var resulteData = QuestionReplyInfoBll.AddReplyPraised(replyId, userId);
+            var baseDataModel = new DataBaseModel { StateCode = resulteData.ToString(), StateDesc = messageList[resulteData] };
+            return ResponseDataApi(baseDataModel);
+        }
     }
 }
