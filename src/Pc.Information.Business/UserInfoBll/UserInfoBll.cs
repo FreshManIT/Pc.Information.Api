@@ -1,4 +1,5 @@
-﻿using Pc.Information.DataAccess.UserInfoDataAccess;
+﻿using System.Collections.Generic;
+using Pc.Information.DataAccess.UserInfoDataAccess;
 using Pc.Information.Interface.IUserInfoBll;
 using Pc.Information.Model.BaseModel;
 using Pc.Information.Model.User;
@@ -70,6 +71,16 @@ namespace Pc.Information.Business.UserInfoBll
             if (newUserInfoModel == null) return 0;
             var userId = _userInfoDataAccess.UpdateUserInfo(newUserInfoModel);
             return userId;
+        }
+
+        /// <summary>
+        /// Get hot user list.
+        /// </summary>
+        /// <param name="number">need number.</param>
+        /// <returns></returns>
+        public List<HotUsersModel> GetTopHotUserList(int number = 16)
+        {
+            return new UserInfoDataAccess().GetHotUsersList(number);
         }
 
         /// <summary>
