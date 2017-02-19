@@ -1,4 +1,6 @@
-﻿using Dapper;
+﻿using System.Collections.Generic;
+using System.Linq;
+using Dapper;
 using Pc.Information.DataAccess.Common;
 using Pc.Information.Model.User;
 using Pc.Information.Utility.FreshSqlHelper;
@@ -51,7 +53,7 @@ namespace Pc.Information.DataAccess.UserInfoDataAccess
         /// <returns></returns>
         public PiFUsersModel GetUserInfoByUserId(int userId)
         {
-            if (userId<1) return null;
+            if (userId < 1) return null;
             var searchSql = string.Format("SELECT * from {0} where Id=@userId limit 1", DataTableGlobal.PiFUsers);
             var sqlHelper = new FreshSqlHelper();
             var param = new DynamicParameters();
@@ -61,14 +63,47 @@ namespace Pc.Information.DataAccess.UserInfoDataAccess
         }
 
         /// <summary>
+        /// Get hot user info list.
+        /// </summary>
+        /// <param name="number">need number.</param>
+        /// <returns></returns>
+        public List<HotUsersModel> GetHotUsersList(int number = 16)
+        {
+            if (number < 1) number = 16;
+            var searchSql = string.Format(@"SELECT
+    hotUserId.*, {0}.PiFUserName,
+    {0}.PiFJob 
+FROM
+    (
+        SELECT
+            PiFFromId,
+            COUNT(PiFFromId) ViewCount
+        FROM
+            {1}
+        GROUP BY
+            PiFFromId
+        ORDER BY
+            ViewCount DESC
+        LIMIT 0,
+        {2}
+    ) AS hotUserId,
+    {0}
+WHERE
+    hotUserId.PiFFromId = {0}.Id", DataTableGlobal.PiFUsers, DataTableGlobal.PiFinformationlog, number);
+            var sqlHelper = new FreshSqlHelper();
+            var userList = sqlHelper.FindToList<HotUsersModel>(searchSql, null);
+            return userList.ToList();
+        }
+
+        /// <summary>
         /// Add new user
         /// </summary>
         /// <param name="newUserInfo"></param>
         /// <returns></returns>
         public int AddUserInfo(PiFUsersModel newUserInfo)
         {
-                if (newUserInfo==null) return 0;
-                var searchSql = string.Format(@"INSERT INTO {0} (
+            if (newUserInfo == null) return 0;
+            var searchSql = string.Format(@"INSERT INTO {0} (
 	PiFSex,
 	PiFUserName,
 	PiFPassword,
@@ -89,10 +124,10 @@ VALUES
 	@PiFBirthday,
 	@PiFRegisterTime
 	)", DataTableGlobal.PiFUsers);
-                var sqlHelper = new FreshSqlHelper();
-                var param = new DynamicParameters(newUserInfo);
-                var userId = sqlHelper.ExcuteNonQuery(searchSql, param);
-                return userId;
+            var sqlHelper = new FreshSqlHelper();
+            var param = new DynamicParameters(newUserInfo);
+            var userId = sqlHelper.ExcuteNonQuery(searchSql, param);
+            return userId;
         }
 
         /// <summary>

@@ -44,4 +44,30 @@ namespace Pc.Information.Model.User
         /// </summary>
         public DateTime PiFRegisterTime { get; set; }
     }
+
+    /// <summary>
+    /// hot user model
+    /// </summary>
+    public class HotUsersModel
+    {
+        /// <summary>
+        /// User id
+        /// </summary>
+        public int PiFFromId { get; set; }
+
+        /// <summary>
+        /// Hot view count
+        /// </summary>
+        public int ViewCount { get; set; }
+
+        /// <summary>
+        /// User name
+        /// </summary>
+        public string PiFUserName { get; set; }
+
+        /// <summary>
+        /// jobname
+        /// </summary>
+        public string PiFJob { get; set; }
+    }
 }

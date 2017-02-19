@@ -35,7 +35,12 @@ namespace Pc.Information.Utility.FreshSqlHelper
         {
             int result;
             MySqlConnection con = FreshSqlConnectionHelper.GetConnection(connection);
-            result = con.Execute(cmd, param, null, null, flag ? CommandType.StoredProcedure : CommandType.Text);
+            lock (con)
+            {
+                if (con.State == ConnectionState.Closed) con.Open();
+                result = con.Execute(cmd, param, null, null, flag ? CommandType.StoredProcedure : CommandType.Text);
+                con.Close();
+            }
             return result;
         }
 
@@ -75,8 +80,14 @@ namespace Pc.Information.Utility.FreshSqlHelper
         /// <returns>The first cell selected</returns>
         public object ExecuteScalar(string cmd, DynamicParameters param, bool flag = false, string connection = null)
         {
+            object result;
             MySqlConnection con = FreshSqlConnectionHelper.GetConnection(connection);
-            var result = con.ExecuteScalar(cmd, param, null, null, flag ? CommandType.StoredProcedure : CommandType.Text);
+            lock (con)
+            {
+                if (con.State == ConnectionState.Closed) con.Open();
+                result = con.ExecuteScalar(cmd, param, null, null, flag ? CommandType.StoredProcedure : CommandType.Text);
+                con.Close();
+            }
             return result;
         }
 
@@ -116,8 +127,14 @@ namespace Pc.Information.Utility.FreshSqlHelper
         /// <returns>t</returns>
         public T FindOne<T>(string cmd, DynamicParameters param, bool flag = false, string connection = null) where T : class, new()
         {
+            T dataReader;
             MySqlConnection con = FreshSqlConnectionHelper.GetConnection(connection);
-            var dataReader = con.QueryFirstOrDefault<T>(cmd, param, commandType: flag ? CommandType.StoredProcedure : CommandType.Text);
+            lock (con)
+            {
+                if (con.State == ConnectionState.Closed) con.Open();
+                dataReader = con.QueryFirstOrDefault<T>(cmd, param, commandType: flag ? CommandType.StoredProcedure : CommandType.Text);
+                con.Close();
+            }
             return dataReader;
         }
 
@@ -150,8 +167,14 @@ namespace Pc.Information.Utility.FreshSqlHelper
         /// <returns>t</returns>
         public IList<T> FindToList<T>(string cmd, DynamicParameters param, bool flag = false, string connection = null) where T : class, new()
         {
+            IEnumerable<T> dataReader;
             MySqlConnection con = FreshSqlConnectionHelper.GetConnection(connection);
-            var dataReader = con.Query<T>(cmd, param, commandType: flag ? CommandType.StoredProcedure : CommandType.Text);
+            lock (con)
+            {
+                if (con.State == ConnectionState.Closed) con.Open();
+                dataReader = con.Query<T>(cmd, param, commandType: flag ? CommandType.StoredProcedure : CommandType.Text);
+                con.Close();
+            }
             return dataReader.ToList();
         }
 
@@ -192,8 +215,15 @@ namespace Pc.Information.Utility.FreshSqlHelper
         /// <returns>page data</returns>
         public IList<T> SearchPageList<T>(string tbName, string strWhere, string orderBy, string fieldList, int pageIndex, int pageSize, DynamicParameters param, out long allCount, string groupby = null, string connectionstring = null) where T : class, new()
         {
+            var searchCount = $"select count(*) from {tbName} where 1=1 {strWhere} ";
             MySqlConnection con = FreshSqlConnectionHelper.GetConnection(connectionstring);
             allCount = 0;
+            lock (con)
+            {
+                if (con.State == ConnectionState.Closed) con.Open();
+                allCount = (long)con.ExecuteScalar(searchCount, param);
+                con.Close();
+            }
             if (pageIndex < 1)
             {
                 pageIndex = 1;
@@ -208,9 +238,13 @@ namespace Pc.Information.Utility.FreshSqlHelper
             }
             sql.Append($" {orderBy} limit {startPageNum} ");
             sql.Append($",{pageSize} ");
-            var tList = con.Query<T>(sql.ToString(), param, commandType: CommandType.Text);
-            con.Close();
-            con.Dispose();
+            IEnumerable<T> tList;
+            lock (con)
+            {
+                if (con.State == ConnectionState.Closed) con.Open();
+                tList = con.Query<T>(sql.ToString(), param, commandType: CommandType.Text);
+                con.Close();
+            }
             return tList.ToList();
         }
 
@@ -272,7 +306,14 @@ namespace Pc.Information.Utility.FreshSqlHelper
             MySqlConnection con = FreshSqlConnectionHelper.GetConnection(connectionstring);
             //Search count.
             var searchCountStr = $"SELECT COUNT({primaryKey}) as dataCount from {tbName}  where 1=1 {strWhere}";
-            var dataCount = con.ExecuteScalar(searchCountStr, param);
+
+            object dataCount;
+            lock (con)
+            {
+                if (con.State == ConnectionState.Closed) con.Open();
+                dataCount = con.ExecuteScalar(searchCountStr, param);
+                con.Close();
+            }
             allCount = (long)dataCount;
             if (pageIndex < 1)
             {
@@ -284,7 +325,14 @@ namespace Pc.Information.Utility.FreshSqlHelper
             sql.Append($" {fieldList} FROM {tbName} WHERE {primaryKey} < (SELECT {primaryKey} FROM {tbName} WHERE {strWhere} ORDER BY {primaryKey} desc LIMIT {startPageNum},1)");
             sql.Append($" {strWhere} ");
             sql.Append($" {orderBy} limit {pageSize} ");
-            var tList = con.Query<T>(sql.ToString(), param, commandType: CommandType.Text);
+
+            IEnumerable<T> tList;
+            lock (con)
+            {
+                if (con.State == ConnectionState.Closed) con.Open();
+                tList = con.Query<T>(sql.ToString(), param, commandType: CommandType.Text);
+                con.Close();
+            }
             return tList.ToList();
         }
 

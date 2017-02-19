@@ -6,6 +6,7 @@ using Pc.Information.Model.User;
 using Pc.Information.CoreModel;
 using Pc.Information.Model.BaseModel;
 using Pc.Information.Utility.DataConvert;
+using System.Collections.Generic;
 
 namespace Pc.Information.Api.Controllers
 {
@@ -48,6 +49,20 @@ namespace Pc.Information.Api.Controllers
         {
             var info = UserInfoBll.GetUserInfo(userName, password);
             return ResponseDataApi(info);
+        }
+
+        /// <summary>
+        /// Get hot user info list.
+        /// </summary>
+        /// <param name="number">need number</param>
+        /// <returns></returns>
+        [HttpGet]
+        [HttpPost]
+        [Route("GetHotUserInfoList")]
+        public ApiResultModel<List<HotUsersModel>> GetHotUserInfoList(int number = 16)
+        {
+            var hotUserList = UserInfoBll.GetTopHotUserList(number);
+            return ResponseDataApi(hotUserList);
         }
 
         /// <summary>

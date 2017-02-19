@@ -1,4 +1,5 @@
-﻿using Pc.Information.Model.BaseModel;
+﻿using System.Collections.Generic;
+using Pc.Information.Model.BaseModel;
 using Pc.Information.Model.User;
 
 namespace Pc.Information.Interface.IUserInfoBll
@@ -29,5 +30,12 @@ namespace Pc.Information.Interface.IUserInfoBll
         /// <param name="newUserInfoModel"></param>
         /// <returns></returns>
         int UpdateUserInfo(PiFUsersModel newUserInfoModel);
+
+        /// <summary>
+        /// Get hot user list.
+        /// </summary>
+        /// <param name="number">need number.</param>
+        /// <returns></returns>
+        List<HotUsersModel> GetTopHotUserList(int number = 16);
     }
 }
