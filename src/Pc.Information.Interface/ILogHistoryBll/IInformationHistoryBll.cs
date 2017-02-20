@@ -37,6 +37,6 @@ namespace Pc.Information.Interface.ILogHistoryBll
         /// <param name="start">start index,begin is zore.</param>
         /// <param name="fail">the fail of list.</param>
         /// <returns>rule type online user list</returns>
-        List<OnlineUserModel> GetAllOnlineUserModels(int ruleType = 0, long start = 0, long fail = -1);
+        List<OnlineUserModel> GetAllOnlineUserModels(int ruleType = -1, long start = 0, long fail = -1);
     }
 }

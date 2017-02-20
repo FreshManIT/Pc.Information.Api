@@ -94,5 +94,33 @@ namespace Pc.Information.Api.Controllers
             var resulteInfo = UserInfoBll.AddUserInfo(newUser);
             return ResponseDataApi(resulteInfo);
         }
+
+        /// <summary>
+        /// Serch user info by user id
+        /// </summary>
+        /// <param name="userId">user id</param>
+        /// <returns></returns>
+        [HttpGet]
+        [HttpPost]
+        [Route("SearchUserInfoByUserId")]
+        public ApiResultModel<PiFUsersModel> SearchUserInfoByUserId(int userId)
+        {
+            var userInfo= UserInfoBll.SearchUserInfoByUserId(userId);
+            return ResponseDataApi(userInfo);
+        }
+
+        /// <summary>
+        /// Update user info model
+        /// </summary>
+        /// <param name="newUserModel">new user info model</param>
+        /// <returns></returns>
+        [HttpGet]
+        [HttpPost]
+        [Route("UpdateUserInfo")]
+        public ApiResultModel<int> UpdateUserInfo(PiFUsersModel newUserModel)
+        {
+            var result = UserInfoBll.UpdateUserInfo(newUserModel);
+            return ResponseDataApi(result);
+        }
     }
 }

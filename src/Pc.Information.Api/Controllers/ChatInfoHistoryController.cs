@@ -60,13 +60,13 @@ namespace Pc.Information.Api.Controllers
         /// </summary>
         /// <param name="userId">user id</param>
         /// <param name="userName">user name</param>
-        /// <param name="ruleType">rule type:1:usually user;2:teacher user.</param>
+        /// <param name="ruleType">rule type:0:common user;1:server provider;2:administrator.</param>
         /// <returns>Online user count</returns>
         [HttpGet]
         [Route("AddOnlineUser")]
         public ApiResultModel<long> AddOnlineUser(int userId, string userName, int ruleType)
         {
-            if (userId < 1 || string.IsNullOrEmpty(userName) || ruleType < 1) return ResponseDataApi(0L);
+            if (userId < 1 || string.IsNullOrEmpty(userName) || ruleType < 0) return ResponseDataApi(0L);
             var newUserModel = new OnlineUserModel { UserId = userId, UserName = userName, RuleType = ruleType };
             var onlineUserCount = ChatHistoryInfoBll.AddOnlineUser(newUserModel);
             return ResponseDataApi(onlineUserCount);
@@ -83,7 +83,7 @@ namespace Pc.Information.Api.Controllers
         [Route("RemoveOnlineUser")]
         public ApiResultModel<long> RemoveOnlineUser(int userId, string userName, int ruleType)
         {
-            if (userId < 1 || string.IsNullOrEmpty(userName) || ruleType < 1) return ResponseDataApi(0L);
+            if (userId < 1 || string.IsNullOrEmpty(userName) || ruleType < 0) return ResponseDataApi(0L);
             var newUserModel = new OnlineUserModel { UserId = userId, UserName = userName, RuleType = ruleType };
             var onlineUserCount = ChatHistoryInfoBll.RemoveOnlineUser(newUserModel);
             return ResponseDataApi(onlineUserCount);
@@ -98,7 +98,7 @@ namespace Pc.Information.Api.Controllers
         /// <returns>rule type online user list</returns>
         [HttpGet]
         [Route("GetAllOnlineUserModels")]
-        public ApiResultModel<List<OnlineUserModel>> GetAllOnlineUserModels(int ruleType = 0, long start = 0,
+        public ApiResultModel<List<OnlineUserModel>> GetAllOnlineUserModels(int ruleType = -1, long start = 0,
             long fail = -1)
         {
             var userList = ChatHistoryInfoBll.GetAllOnlineUserModels(ruleType, start, fail);
