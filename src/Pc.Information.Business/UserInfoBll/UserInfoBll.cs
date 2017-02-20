@@ -69,6 +69,10 @@ namespace Pc.Information.Business.UserInfoBll
         public int UpdateUserInfo(PiFUsersModel newUserInfoModel)
         {
             if (newUserInfoModel == null) return 0;
+            if (!string.IsNullOrEmpty(newUserInfoModel.PiFPassword))
+            {
+                newUserInfoModel.PiFPassword = DesHelper.DesEnCode(newUserInfoModel.PiFPassword);
+            }
             var userId = _userInfoDataAccess.UpdateUserInfo(newUserInfoModel);
             return userId;
         }
