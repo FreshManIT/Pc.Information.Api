@@ -37,5 +37,12 @@ namespace Pc.Information.Interface.IUserInfoBll
         /// <param name="number">need number.</param>
         /// <returns></returns>
         List<HotUsersModel> GetTopHotUserList(int number = 16);
+
+        /// <summary>
+        /// Serch user info by user id
+        /// </summary>
+        /// <param name="userId">user id</param>
+        /// <returns></returns>
+        PiFUsersModel SearchUserInfoByUserId(int userId);
     }
 }

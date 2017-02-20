@@ -94,5 +94,17 @@ namespace Pc.Information.Business.UserInfoBll
             var userInfo = _userInfoDataAccess.GetUserInfoByUserName(userName);
             return userInfo;
         }
+
+        /// <summary>
+        /// Serch user info by user id
+        /// </summary>
+        /// <param name="userId">user id</param>
+        /// <returns></returns>
+        public PiFUsersModel SearchUserInfoByUserId(int userId)
+        {
+            if (userId < 1) return null;
+            var userInfo = _userInfoDataAccess.GetUserInfoByUserId(userId);
+            return userInfo;
+        }
     }
 }

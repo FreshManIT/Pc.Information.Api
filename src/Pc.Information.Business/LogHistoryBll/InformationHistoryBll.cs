@@ -100,7 +100,7 @@ namespace Pc.Information.Business.LogHistoryBll
         /// <param name="start">start index,begin is zore.</param>
         /// <param name="fail">the fail of list.</param>
         /// <returns>rule type online user list</returns>
-        public List<OnlineUserModel> GetAllOnlineUserModels(int ruleType = 0, long start = 0, long fail = -1)
+        public List<OnlineUserModel> GetAllOnlineUserModels(int ruleType = -1, long start = 0, long fail = -1)
         {
             var cacheKey = AppConfigurationHelper.GetAppSettings<CacheLogModel>("AppSettings:OnlineUserCache");
             cacheKey = string.IsNullOrEmpty(cacheKey?.Cachekey) ? new CacheLogModel { Cachekey = "OnlineUserCacheInfo", DatabaseNumber = 2 } : cacheKey;
@@ -108,7 +108,7 @@ namespace Pc.Information.Business.LogHistoryBll
                 cacheKey.DatabaseNumber);
             var userList = userListTask.Result;
             if (userList == null || !userList.Any()) return new List<OnlineUserModel>();
-            if (ruleType != 0) return userList.Where(f => f.RuleType == ruleType).ToList();
+            if (ruleType != -1) return userList.Where(f => f.RuleType == ruleType).ToList();
             return userList;
         }
         #endregion
