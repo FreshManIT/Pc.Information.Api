@@ -149,5 +149,44 @@ where PiFUserName=@PiFUserName and PiFPassword=@PiFPassword", DataTableGlobal.Pi
             var userId = sqlHelper.ExcuteNonQuery(searchSql, param);
             return userId;
         }
+
+        /// <summary>
+        /// update password
+        /// </summary>
+        /// <param name="userId">user id</param>
+        /// <param name="oldPassword">old password</param>
+        /// <param name="newPassword">new password</param>
+        /// <returns></returns>
+        public int UpdateUserPassword(int userId, string oldPassword, string newPassword)
+        {
+            if (userId < 1 || string.IsNullOrEmpty(oldPassword) || string.IsNullOrEmpty(newPassword) || oldPassword == newPassword) return 0;
+            var searchSql = string.Format(@"UPDATE {0} 
+SET PiFPassword =@newPassword 
+WHERE 
+	Id =@Id 
+AND PiFPassword =@oldPassword", DataTableGlobal.PiFUsers);
+            var sqlHelper = new FreshSqlHelper();
+            var param = new DynamicParameters();
+            param.Add("newPassword", newPassword, System.Data.DbType.String);
+            param.Add("oldPassword", oldPassword, System.Data.DbType.String);
+            param.Add("Id", userId, System.Data.DbType.Int32);
+            var resulte = sqlHelper.ExcuteNonQuery(searchSql, param);
+            return resulte;
+        }
+
+        /// <summary>
+        /// Update user Activation.
+        /// </summary>
+        /// <returns></returns>
+        public int UpdateUserEmailActivation(int userId)
+        {
+            if (userId < 1) return 0;
+            var searchSql = string.Format(@"UPDATE {0} SET	PiFEmailActivation=1 where Id=@Id", DataTableGlobal.PiFUsers);
+            var sqlHelper = new FreshSqlHelper();
+            var param = new DynamicParameters();
+            param.Add("Id", userId, System.Data.DbType.Int32);
+            var result = sqlHelper.ExcuteNonQuery(searchSql, param);
+            return result;
+        }
     }
 }

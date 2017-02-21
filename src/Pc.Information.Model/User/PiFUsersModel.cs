@@ -43,6 +43,11 @@ namespace Pc.Information.Model.User
         /// Register time.
         /// </summary>
         public DateTime PiFRegisterTime { get; set; }
+
+        /// <summary>
+        /// Email is activation 1:activation;0:none;
+        /// </summary>
+        public int PiFEmailActivation { get; set; }
     }
 
     /// <summary>

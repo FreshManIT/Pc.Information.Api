@@ -1,8 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using Newtonsoft.Json;
+using Pc.Information.Business.LogHistoryBll;
 using Pc.Information.DataAccess.UserInfoDataAccess;
 using Pc.Information.Interface.IUserInfoBll;
 using Pc.Information.Model.BaseModel;
 using Pc.Information.Model.User;
+using Pc.Information.Utility.Cache;
 using Pc.Information.Utility.Email;
 using Pc.Information.Utility.Security;
 
@@ -109,6 +113,73 @@ namespace Pc.Information.Business.UserInfoBll
             if (userId < 1) return null;
             var userInfo = _userInfoDataAccess.GetUserInfoByUserId(userId);
             return userInfo;
+        }
+
+        /// <summary>
+        /// update password
+        /// </summary>
+        /// <param name="userId">user id</param>
+        /// <param name="oldPassword">old password</param>
+        /// <param name="newPassword">new password</param>
+        /// <returns></returns>
+        public int UpdataUserPassword(int userId, string oldPassword, string newPassword)
+        {
+            if (userId < 1 || string.IsNullOrEmpty(oldPassword) || string.IsNullOrEmpty(newPassword) || oldPassword == newPassword) return 0;
+            oldPassword = DesHelper.DesEnCode(oldPassword);
+            newPassword = DesHelper.DesEnCode(newPassword);
+            var result = _userInfoDataAccess.UpdateUserPassword(userId, oldPassword, newPassword);
+            return result;
+        }
+
+        /// <summary>
+        /// activation email
+        /// </summary>
+        /// <param name="userId">user id</param>
+        /// <returns></returns>
+        public DataBaseModel SendActivationEmail(int userId)
+        {
+            var resultModel = new DataBaseModel { StateCode = "0000", StateDesc = "Success." };
+            var userInfo = _userInfoDataAccess.GetUserInfoByUserId(userId);
+            if (userInfo == null)
+            {
+                resultModel.StateCode = "1000";
+                resultModel.StateDesc = "User is invalid";
+                return resultModel;
+            }
+            if (string.IsNullOrEmpty(userInfo.PiFEmailAddress) || !EmailHelper.IsEmailAddress(userInfo.PiFEmailAddress))
+            {
+                resultModel.StateCode = "1000";
+                resultModel.StateDesc = "Emial Address is invalid.";
+                return resultModel;
+            }
+            var jsonKey = Guid.NewGuid().ToString();
+            var activationModel = new UserEmailActivationModel { EndTime = DateTime.Now.AddMinutes(30), GuId = jsonKey, UserId = userId };
+            var endTime = new TimeSpan(0, 30, 0);
+            var isSave = RedisCacheHelper.AddSet(jsonKey, activationModel, endTime);
+            if (!isSave)
+            {
+                var logBll = new ErrorLogBll();
+                logBll.WriteWarningInfo("Redis cache is save fail,please check redis server.");
+                resultModel.StateCode = "1000";
+                resultModel.StateDesc = "Redis cache is save fail,please check redis server.";
+                return resultModel;
+            }
+            var message = string.Format("<div class=\"wui-FileReadList paraStyle\" style=\"background-color:#fff\"><div class=\"text\"><div class=\"txt\"><div class=\"mailMainArea\" style=\"font-size:14px;font-family:Verdana,&quot;宋体&quot;,Helvetica,sans-serif;line-height:1.66;padding:8px 10px;margin:0;overflow:auto\"><div class=\"\"><a target =\"_blank\" class=\"\" href='http://localhost:3000/home' _act=\"check_domail\"><b>FM 信息咨询系统</b></a></div><br style =\"clear:both; height:0\"><div class=\"\" style=\"background: none repeat scroll 0 0 #FFFFFF; border: 1px solid #E9E9E9; margin: 2px 0 0; padding: 30px;\"><p>您好: </p><p>这是您在 FM 信息咨询系统 上的重要邮件, 功能是进行 FM 信息咨询系统 帐户邮箱验证, 请点击下面的连接完成验证</p><p style =\"border-top: 1px solid #DDDDDD;margin: 15px 0 25px;padding: 15px;\">请点击链接继续: <a target =\"_blank\" href='{0}' _act=\"check_domail\">{0}</a></p><p></p><p class=\"\" style=\"border-top: 1px solid #DDDDDD; padding-top:6px; margin-top:25px; color:#838383;\">请勿回复本邮件, 此邮箱未受监控, 您不会得到任何回复. 要获得帮助, 请登录网站 | <a target=\"_blank\" href=\"http://localhost:3000/set/#info\" _act=\"check_domail\">修改通知设置</a><br><br><a target=\"_blank\" href='http://localhost:3000/set/#info' _act=\"check_domail\">FM 信息咨询系统</a></p></div></div>", "http://localhost:3000/activation?key=" + jsonKey);
+            EmailHelper.SendEmail(userInfo.PiFEmailAddress, "FM 信息咨询系统 帐户邮箱验证", message, "FM 信息咨询系统 帐户邮箱验证", true);
+            return resultModel;
+        }
+
+        /// <summary>
+        /// ActivationEmail
+        /// </summary>
+        /// <param name="activationKey">activation key</param>
+        /// <returns></returns>
+        public int ActivationEmail(string activationKey)
+        {
+            if (string.IsNullOrEmpty(activationKey)) return 0;
+            var activationModel = RedisCacheHelper.Get<UserEmailActivationModel>(activationKey);
+            if (activationModel == null || activationModel.UserId < 1 || activationModel.EndTime < DateTime.Now) return -1;
+            return _userInfoDataAccess.UpdateUserEmailActivation(activationModel.UserId);
         }
     }
 }

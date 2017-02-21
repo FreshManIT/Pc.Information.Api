@@ -105,7 +105,7 @@ namespace Pc.Information.Api.Controllers
         [Route("SearchUserInfoByUserId")]
         public ApiResultModel<PiFUsersModel> SearchUserInfoByUserId(int userId)
         {
-            var userInfo= UserInfoBll.SearchUserInfoByUserId(userId);
+            var userInfo = UserInfoBll.SearchUserInfoByUserId(userId);
             return ResponseDataApi(userInfo);
         }
 
@@ -120,6 +120,50 @@ namespace Pc.Information.Api.Controllers
         public ApiResultModel<int> UpdateUserInfo(PiFUsersModel newUserModel)
         {
             var result = UserInfoBll.UpdateUserInfo(newUserModel);
+            return ResponseDataApi(result);
+        }
+
+        /// <summary>
+        /// update password
+        /// </summary>
+        /// <param name="userId">user id</param>
+        /// <param name="oldPassword">old password</param>
+        /// <param name="newPassword">new password</param>
+        /// <returns></returns>
+        [HttpGet]
+        [HttpPost]
+        [Route("UpdateUserPassword")]
+        public ApiResultModel<int> UpdateUserPassword(int userId, string oldPassword, string newPassword)
+        {
+            var result = UserInfoBll.UpdataUserPassword(userId, oldPassword, newPassword);
+            return ResponseDataApi(result);
+        }
+
+        /// <summary>
+        /// activation email
+        /// </summary>
+        /// <param name="userId">user id</param>
+        /// <returns></returns>
+        [HttpGet]
+        [HttpPost]
+        [Route("SendActivationEmail")]
+        public ApiResultModel<DataBaseModel> SendActivationEmail(int userId)
+        {
+            var result = UserInfoBll.SendActivationEmail(userId);
+            return ResponseDataApi(result);
+        }
+
+        /// <summary>
+        /// ActivationEmail
+        /// </summary>
+        /// <param name="activationKey">activation key</param>
+        /// <returns></returns>
+        [HttpGet]
+        [HttpPost]
+        [Route("ActivationEmail")]
+        public ApiResultModel<int> ActivationEmail(string activationKey)
+        {
+            var result = UserInfoBll.ActivationEmail(activationKey);
             return ResponseDataApi(result);
         }
     }
