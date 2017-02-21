@@ -44,5 +44,28 @@ namespace Pc.Information.Interface.IUserInfoBll
         /// <param name="userId">user id</param>
         /// <returns></returns>
         PiFUsersModel SearchUserInfoByUserId(int userId);
+
+        /// <summary>
+        /// update password
+        /// </summary>
+        /// <param name="userId">user id</param>
+        /// <param name="oldPassword">old password</param>
+        /// <param name="newPassword">new password</param>
+        /// <returns></returns>
+        int UpdataUserPassword(int userId, string oldPassword, string newPassword);
+
+        /// <summary>
+        /// activation email
+        /// </summary>
+        /// <param name="userId">user id</param>
+        /// <returns></returns>
+        DataBaseModel SendActivationEmail(int userId);
+
+        /// <summary>
+        /// ActivationEmail
+        /// </summary>
+        /// <param name="activationKey">activation key</param>
+        /// <returns></returns>
+        int ActivationEmail(string activationKey);
     }
 }
