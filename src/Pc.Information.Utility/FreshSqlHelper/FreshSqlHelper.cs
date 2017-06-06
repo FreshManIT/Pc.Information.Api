@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Data;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -34,7 +35,7 @@ namespace Pc.Information.Utility.FreshSqlHelper
         public int ExcuteNonQuery(string cmd, DynamicParameters param, bool flag = false, string connection = null)
         {
             int result;
-            MySqlConnection con = FreshSqlConnectionHelper.GetConnection(connection);
+            IDbConnection con = FreshSqlConnectionHelper.GetMySqlConnectionConnection(connection);
             lock (con)
             {
                 if (con.State == ConnectionState.Closed) con.Open();
@@ -55,7 +56,7 @@ namespace Pc.Information.Utility.FreshSqlHelper
         public async Task<int> ExcuteNonQueryAsync(string cmd, DynamicParameters param, bool flag = false, string connection = null)
         {
             int result;
-            MySqlConnection con = FreshSqlConnectionHelper.GetConnection(connection);
+            MySqlConnection con = FreshSqlConnectionHelper.GetMySqlConnectionConnection(connection);
             if (flag)
             {
                 result = await con.ExecuteAsync(cmd, param, null, null, CommandType.StoredProcedure);
@@ -81,7 +82,7 @@ namespace Pc.Information.Utility.FreshSqlHelper
         public object ExecuteScalar(string cmd, DynamicParameters param, bool flag = false, string connection = null)
         {
             object result;
-            MySqlConnection con = FreshSqlConnectionHelper.GetConnection(connection);
+            MySqlConnection con = FreshSqlConnectionHelper.GetMySqlConnectionConnection(connection);
             lock (con)
             {
                 if (con.State == ConnectionState.Closed) con.Open();
@@ -102,7 +103,7 @@ namespace Pc.Information.Utility.FreshSqlHelper
         public async Task<object> ExecuteScalarAsync(string cmd, DynamicParameters param, bool flag = false, string connection = null)
         {
             object result;
-            MySqlConnection con = FreshSqlConnectionHelper.GetConnection(connection);
+            MySqlConnection con = FreshSqlConnectionHelper.GetMySqlConnectionConnection(connection);
             if (flag)
             {
                 result = await con.ExecuteScalarAsync(cmd, param, null, null, CommandType.StoredProcedure);
@@ -128,7 +129,7 @@ namespace Pc.Information.Utility.FreshSqlHelper
         public T FindOne<T>(string cmd, DynamicParameters param, bool flag = false, string connection = null) where T : class, new()
         {
             T dataReader;
-            MySqlConnection con = FreshSqlConnectionHelper.GetConnection(connection);
+            MySqlConnection con = FreshSqlConnectionHelper.GetMySqlConnectionConnection(connection);
             lock (con)
             {
                 if (con.State == ConnectionState.Closed) con.Open();
@@ -149,7 +150,7 @@ namespace Pc.Information.Utility.FreshSqlHelper
         /// <returns>t</returns>
         public async Task<T> FindOneAsync<T>(string cmd, DynamicParameters param, bool flag = false, string connection = null) where T : class, new()
         {
-            MySqlConnection con = FreshSqlConnectionHelper.GetConnection(connection);
+            MySqlConnection con = FreshSqlConnectionHelper.GetMySqlConnectionConnection(connection);
             var dataReader = await con.QueryFirstOrDefaultAsync<T>(cmd, param, commandType: flag ? CommandType.StoredProcedure : CommandType.Text);
             return dataReader;
         }
@@ -168,7 +169,7 @@ namespace Pc.Information.Utility.FreshSqlHelper
         public IList<T> FindToList<T>(string cmd, DynamicParameters param, bool flag = false, string connection = null) where T : class, new()
         {
             IEnumerable<T> dataReader;
-            MySqlConnection con = FreshSqlConnectionHelper.GetConnection(connection);
+            MySqlConnection con = FreshSqlConnectionHelper.GetMySqlConnectionConnection(connection);
             lock (con)
             {
                 if (con.State == ConnectionState.Closed) con.Open();
@@ -189,7 +190,7 @@ namespace Pc.Information.Utility.FreshSqlHelper
         /// <returns>t</returns>
         public async Task<IList<T>> FindToListAsync<T>(string cmd, DynamicParameters param, bool flag = false, string connection = null) where T : class, new()
         {
-            MySqlConnection con = FreshSqlConnectionHelper.GetConnection(connection);
+            MySqlConnection con = FreshSqlConnectionHelper.GetMySqlConnectionConnection(connection);
             var dataReader = await con.QueryAsync<T>(cmd, param, commandType: flag ? CommandType.StoredProcedure : CommandType.Text);
             return dataReader.ToList();
         }
@@ -216,7 +217,8 @@ namespace Pc.Information.Utility.FreshSqlHelper
         public IList<T> SearchPageList<T>(string tbName, string strWhere, string orderBy, string fieldList, int pageIndex, int pageSize, DynamicParameters param, out long allCount, string groupby = null, string connectionstring = null) where T : class, new()
         {
             var searchCount = $"select count(*) from {tbName} where 1=1 {strWhere} ";
-            MySqlConnection con = FreshSqlConnectionHelper.GetConnection(connectionstring);
+            MySqlConnection con = FreshSqlConnectionHelper.GetMySqlConnectionConnection(connectionstring);
+            // ReSharper disable once RedundantAssignment
             allCount = 0;
             lock (con)
             {
@@ -268,7 +270,7 @@ namespace Pc.Information.Utility.FreshSqlHelper
         /// <returns>page data</returns>
         public async Task<IList<T>> SearchPageListAsync<T>(string tbName, string strWhere, string orderBy, string fieldList, int pageIndex, int pageSize, DynamicParameters param, string connectionstring = null) where T : class, new()
         {
-            MySqlConnection con = FreshSqlConnectionHelper.GetConnection(connectionstring);
+            MySqlConnection con = FreshSqlConnectionHelper.GetMySqlConnectionConnection(connectionstring);
             if (pageIndex < 1)
             {
                 pageIndex = 1;
@@ -303,7 +305,7 @@ namespace Pc.Information.Utility.FreshSqlHelper
         /// <returns></returns>
         public IList<T> SearchPageListHigh<T>(string tbName, string strWhere, string orderBy, string fieldList, string primaryKey, int pageIndex, int pageSize, out long allCount, DynamicParameters param, string connectionstring = null)
         {
-            MySqlConnection con = FreshSqlConnectionHelper.GetConnection(connectionstring);
+            MySqlConnection con = FreshSqlConnectionHelper.GetMySqlConnectionConnection(connectionstring);
             //Search count.
             var searchCountStr = $"SELECT COUNT({primaryKey}) as dataCount from {tbName}  where 1=1 {strWhere}";
 
@@ -355,7 +357,7 @@ namespace Pc.Information.Utility.FreshSqlHelper
         /// <returns></returns>
         public async Task<IList<T>> SearchPageListHighAsync<T>(string tbName, string strWhere, string orderBy, string fieldList, string primaryKey, int pageIndex, int pageSize, DynamicParameters param, string connectionstring = null)
         {
-            MySqlConnection con = FreshSqlConnectionHelper.GetConnection(connectionstring);
+            MySqlConnection con = FreshSqlConnectionHelper.GetMySqlConnectionConnection(connectionstring);
             if (pageIndex < 1)
             {
                 pageIndex = 1;
@@ -370,5 +372,18 @@ namespace Pc.Information.Utility.FreshSqlHelper
             return tList.ToList();
         }
         #endregion
+
+        private static readonly string ConnectionString = FreshSqlConnectionHelper.GetConnectionString();
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public static SqlConnection GetOpenConnection()
+        {
+            var connection = new SqlConnection(ConnectionString);
+            connection.Open();
+            return connection;
+        }
     }
 }
