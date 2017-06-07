@@ -80,7 +80,7 @@ namespace Pc.Information.Api
             //Add Question Reply server info
             services.AddTransient<IQuestionReplyBll, QuestionReplyBll>();
             services.AddSwaggerGen();
-            //Add the detail information for the API.
+            //Add the detail information for the API.http://localhost:port/swagger/ui/index.html
             services.ConfigureSwaggerGen(options =>
             {
                 options.SingleApiVersion(new Info
