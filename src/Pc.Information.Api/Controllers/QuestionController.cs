@@ -4,9 +4,9 @@ using Pc.Information.Model.QuestionInfo;
 using System;
 using Pc.Information.Model.BaseModel;
 using System.Collections.Generic;
-using Pc.Information.Utility.DataConvert;
 using System.Linq;
 using Pc.Information.Interface.IQuestionReplyBll;
+using FreshCommonUtility.DataConvert;
 
 namespace Pc.Information.Api.Controllers
 {

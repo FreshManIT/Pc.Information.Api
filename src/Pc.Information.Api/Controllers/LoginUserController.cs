@@ -3,10 +3,10 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Pc.Information.Interface.IUserInfoBll;
 using Pc.Information.Model.User;
-using Pc.Information.CoreModel;
 using Pc.Information.Model.BaseModel;
-using Pc.Information.Utility.DataConvert;
 using System.Collections.Generic;
+using FreshCommonUtility.DataConvert;
+using FreshCommonUtility.CoreModel;
 
 namespace Pc.Information.Api.Controllers
 {

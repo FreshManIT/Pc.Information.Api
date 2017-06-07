@@ -9,7 +9,6 @@ using Microsoft.Extensions.Logging;
 using Pc.Information.Api.MiddleWares;
 using Pc.Information.Interface.IUserInfoBll;
 using Pc.Information.Business.UserInfoBll;
-using Pc.Information.CoreModel;
 using Pc.Information.Interface.ILogHistoryBll;
 using Pc.Information.Business.LogHistoryBll;
 using Microsoft.Extensions.PlatformAbstractions;
@@ -18,6 +17,7 @@ using Pc.Information.Interface.IQuestionBll;
 using Pc.Information.Business.QuestionBll;
 using Pc.Information.Interface.IQuestionReplyBll;
 using Pc.Information.Business.QuestionReplyBll;
+using FreshCommonUtility.CoreModel;
 
 namespace Pc.Information.Api
 {

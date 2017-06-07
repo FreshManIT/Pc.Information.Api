@@ -32,6 +32,30 @@
           "lib/netstandard1.3/Dapper.dll": {}
         }
       },
+      "FreshCommonUtility/1.0.0.1": {
+        "type": "package",
+        "dependencies": {
+          "Dapper": "1.50.2",
+          "MailKit": "1.10.1",
+          "Microsoft.AspNetCore.Http": "1.1.0",
+          "Microsoft.Extensions.Configuration": "1.0.0",
+          "Microsoft.Extensions.Configuration.FileExtensions": "1.0.0",
+          "Microsoft.Extensions.Configuration.Json": "1.0.0",
+          "Microsoft.Extensions.DependencyInjection": "1.0.0",
+          "Microsoft.Extensions.Options.ConfigurationExtensions": "1.0.0",
+          "MySql.Data.Core": "7.0.4-IR-191",
+          "NETStandard.Library": "1.6.0",
+          "Npgsql": "3.1.8",
+          "StackExchange.Redis": "1.1.608",
+          "System.Text.Encoding.CodePages": "4.0.1"
+        },
+        "compile": {
+          "lib/netstandard1.6/FreshCommonUtility.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard1.6/FreshCommonUtility.dll": {}
+        }
+      },
       "Google.Protobuf/3.0.0-beta4": {
         "type": "package",
         "dependencies": {
@@ -2643,19 +2667,6 @@
           "lib/netstandard1.3/System.Xml.XmlDocument.dll": {}
         }
       },
-      "Pc.Information.CoreModel/1.0.0": {
-        "type": "project",
-        "framework": ".NETStandard,Version=v1.6",
-        "dependencies": {
-          "NETStandard.Library": "1.6.0"
-        },
-        "compile": {
-          "netstandard1.6/Pc.Information.CoreModel.dll": {}
-        },
-        "runtime": {
-          "netstandard1.6/Pc.Information.CoreModel.dll": {}
-        }
-      },
       "Pc.Information.Model/1.0.0": {
         "type": "project",
         "framework": ".NETStandard,Version=v1.6",
@@ -2668,32 +2679,6 @@
         },
         "runtime": {
           "netstandard1.6/Pc.Information.Model.dll": {}
-        }
-      },
-      "Pc.Information.Utility/1.0.0": {
-        "type": "project",
-        "framework": ".NETStandard,Version=v1.6",
-        "dependencies": {
-          "Dapper": "1.50.2",
-          "MailKit": "1.10.1",
-          "Microsoft.AspNetCore.Http": "1.1.0",
-          "Microsoft.Extensions.Configuration": "1.0.0",
-          "Microsoft.Extensions.Configuration.FileExtensions": "1.0.0",
-          "Microsoft.Extensions.Configuration.Json": "1.0.0",
-          "Microsoft.Extensions.DependencyInjection": "1.0.0",
-          "Microsoft.Extensions.Options.ConfigurationExtensions": "1.0.0",
-          "MySql.Data.Core": "7.0.4-IR-191",
-          "NETStandard.Library": "1.6.0",
-          "Npgsql": "3.1.8",
-          "Pc.Information.CoreModel": "1.0.0",
-          "StackExchange.Redis": "1.1.608",
-          "System.Text.Encoding.CodePages": "4.0.1"
-        },
-        "compile": {
-          "netstandard1.6/Pc.Information.Utility.dll": {}
-        },
-        "runtime": {
-          "netstandard1.6/Pc.Information.Utility.dll": {}
         }
       }
     }
@@ -2714,6 +2699,17 @@
         "lib/net451/Dapper.xml",
         "lib/netstandard1.3/Dapper.dll",
         "lib/netstandard1.3/Dapper.xml"
+      ]
+    },
+    "FreshCommonUtility/1.0.0.1": {
+      "sha512": "wDRrWuWxsk23tz0vbIY0JIWEfGM7KTxdDtn/LaIT8wJwhPl+1ueDRHjrQJ47B2dAtbMLEfyJhwoZRqoF8J2HRA==",
+      "type": "package",
+      "path": "FreshCommonUtility/1.0.0.1",
+      "files": [
+        "FreshCommonUtility.1.0.0.1.nupkg.sha512",
+        "FreshCommonUtility.nuspec",
+        "lib/netstandard1.6/FreshCommonUtility.dll",
+        "lib/netstandard1.6/FreshCommonUtility.xml"
       ]
     },
     "Google.Protobuf/3.0.0-beta4": {
@@ -7565,27 +7561,17 @@
         "system.xml.xmldocument.nuspec"
       ]
     },
-    "Pc.Information.CoreModel/1.0.0": {
-      "type": "project",
-      "path": "../Pc.Information.CoreModel/project.json",
-      "msbuildProject": "../Pc.Information.CoreModel/Pc.Information.CoreModel.xproj"
-    },
     "Pc.Information.Model/1.0.0": {
       "type": "project",
       "path": "../Pc.Information.Model/project.json",
       "msbuildProject": "../Pc.Information.Model/Pc.Information.Model.xproj"
-    },
-    "Pc.Information.Utility/1.0.0": {
-      "type": "project",
-      "path": "../Pc.Information.Utility/project.json",
-      "msbuildProject": "../Pc.Information.Utility/Pc.Information.Utility.xproj"
     }
   },
   "projectFileDependencyGroups": {
     "": [
+      "FreshCommonUtility >= 1.0.0.1",
       "NETStandard.Library >= 1.6.0",
       "Pc.Information.Model >= 1.0.0-*",
-      "Pc.Information.Utility >= 1.0.0-*",
       "System.Text.Encoding.CodePages >= 4.0.1"
     ],
     ".NETStandard,Version=v1.6": []

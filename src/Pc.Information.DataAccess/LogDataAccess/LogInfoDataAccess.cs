@@ -5,9 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Dapper;
+using FreshCommonUtility.SqlHelper;
 using Pc.Information.DataAccess.Common;
 using Pc.Information.Model.ErrorInfoLog;
-using Pc.Information.Utility.FreshSqlHelper;
 
 namespace Pc.Information.DataAccess.LogDataAccess
 {
@@ -43,9 +43,8 @@ VALUES
         @ErrorTime,
         @ErrorType
     )";
-            var sqlHelper = new FreshSqlHelper();
             var param = new DynamicParameters(newLogInfo);
-            var userId = sqlHelper.ExcuteNonQuery(searchSql, param);
+            var userId = SqlHelper.ExcuteNonQuery(searchSql, param);
             return userId;
         }
 
@@ -75,9 +74,8 @@ VALUES
 		@ErrorTime,
 		@ErrorType
 	)";
-            var sqlHelper = new FreshSqlHelper();
             var param = new DynamicParameters(newLogInfo);
-            var userId = sqlHelper.ExcuteNonQueryAsync(searchSql, param);
+            var userId = SqlHelper.ExcuteNonQueryAsync(searchSql, param);
             return userId;
         }
 
@@ -101,13 +99,12 @@ VALUES
             var orderBy = " ErrorTime desc ";
             var fieldList = " * ";
             long countNumber;
-            var sqlHelper = new FreshSqlHelper();
             var param = new DynamicParameters();
             param.Add("id", id);
             param.Add("startTime", startTime, DbType.DateTime);
             param.Add("endTime", endTime, DbType.DateTime);
             param.Add("errorType", errorType);
-            var errorLogList = sqlHelper.SearchPageList<ErrorInfoLogModel>(DataTableGlobal.PiFErrorLog, strWhere.ToString(), orderBy,
+            var errorLogList = SqlHelper.SearchPageList<ErrorInfoLogModel>(DataTableGlobal.PiFErrorLog, strWhere.ToString(), orderBy,
                 fieldList, pageIndex, pageSize, param, out countNumber);
             return errorLogList.ToList();
         }

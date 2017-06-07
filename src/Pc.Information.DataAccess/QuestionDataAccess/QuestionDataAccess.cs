@@ -4,9 +4,9 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using Dapper;
+using FreshCommonUtility.SqlHelper;
 using Pc.Information.DataAccess.Common;
 using Pc.Information.Model.QuestionInfo;
-using Pc.Information.Utility.FreshSqlHelper;
 
 namespace Pc.Information.DataAccess.QuestionDataAccess
 {
@@ -38,9 +38,8 @@ VALUES
 		@PiFSendUserId,
 		@PiFSendUserName
 	)", DataTableGlobal.PiFquestioninfo);
-            var sqlHelper = new FreshSqlHelper();
             var param = new DynamicParameters(newQuestionInfo);
-            var id = sqlHelper.ExcuteNonQuery(searchSql, param);
+            var id = SqlHelper.ExcuteNonQuery(searchSql, param);
             return id;
         }
 
@@ -57,9 +56,8 @@ SET PiFQuestionTitle =@PiFQuestionTitle,
  PiFQuestionContent =@PiFQuestionContent
 WHERE
 	Id =@Id", DataTableGlobal.PiFquestioninfo);
-            var sqlHelper = new FreshSqlHelper();
             var param = new DynamicParameters(newQuestionInfo);
-            var id = sqlHelper.ExcuteNonQuery(searchSql, param);
+            var id = SqlHelper.ExcuteNonQuery(searchSql, param);
             return id;
         }
 
@@ -83,13 +81,12 @@ WHERE
             var orderBy = " order by Id desc ";
             var fieldList = " * ";
             long countNumber;
-            var sqlHelper = new FreshSqlHelper();
             var param = new DynamicParameters();
             param.Add("id", id);
             param.Add("startTime", startTime, DbType.DateTime);
             param.Add("endTime", endTime, DbType.DateTime);
             param.Add("PiFQuestionTitle", "%" + title + "%");
-            var errorLogList = sqlHelper.SearchPageList<PiFQuestionInfoModel>(DataTableGlobal.PiFquestioninfo, strWhere.ToString(), orderBy,
+            var errorLogList = SqlHelper.SearchPageList<PiFQuestionInfoModel>(DataTableGlobal.PiFquestioninfo, strWhere.ToString(), orderBy,
                  fieldList, pageIndex, pageSize, param, out countNumber);
             return errorLogList.ToList();
         }
@@ -112,8 +109,7 @@ WHERE
                 searchSql = string.Format(@"select * from {0}
 where id in({1}) ", DataTableGlobal.PiFquestioninfo, questionList.Aggregate(string.Empty, (current, item) => current + (item + ",")).TrimEnd(','));
             }
-            var sqlHelper = new FreshSqlHelper();
-            var result = sqlHelper.FindToList<PiFQuestionInfoModel>(searchSql, null);
+            var result = SqlHelper.FindToList<PiFQuestionInfoModel>(searchSql, null);
             return result.ToList();
         }
 
@@ -139,8 +135,7 @@ where id in({1}) ", DataTableGlobal.PiFquestioninfo, questionList.Aggregate(stri
             var orderBy = " order by Id desc ";
             var fieldList = " PiFQuestionId, Count(PiFQuestionId) AS ViewCount ";
             long countNumber;
-            var sqlHelper = new FreshSqlHelper();
-            var resulteList = sqlHelper.SearchPageList<PiFQuestionViewCountInfoModel>(DataTableGlobal.PiFQuestionViewInfo, strWhere.ToString(), orderBy,
+            var resulteList = SqlHelper.SearchPageList<PiFQuestionViewCountInfoModel>(DataTableGlobal.PiFQuestionViewInfo, strWhere.ToString(), orderBy,
                  fieldList, 1, topNumber, null, out countNumber, groupBy);
             return resulteList.ToList();
         }
@@ -167,8 +162,7 @@ where id in({1}) ", DataTableGlobal.PiFquestioninfo, questionList.Aggregate(stri
             var orderBy = " order by Id desc ";
             var fieldList = " PiFQuestionId, Count(PiFQuestionId) AS ViewCount ";
             long countNumber;
-            var sqlHelper = new FreshSqlHelper();
-            var resulteList = sqlHelper.SearchPageList<PiFQuestionViewCountInfoModel>(DataTableGlobal.PiFquestionreplyinfo, strWhere.ToString(), orderBy,
+            var resulteList = SqlHelper.SearchPageList<PiFQuestionViewCountInfoModel>(DataTableGlobal.PiFquestionreplyinfo, strWhere.ToString(), orderBy,
                  fieldList, 1, topNumber, null, out countNumber, groupBy);
             return resulteList.ToList();
         }
@@ -194,9 +188,8 @@ VALUES
 		@PiFUserId,
 		@PiFVisitTime
 	)", DataTableGlobal.PiFQuestionViewInfo);
-            var sqlHelper = new FreshSqlHelper();
             var param = new DynamicParameters(newViewModel);
-            var id = sqlHelper.ExcuteNonQuery(searchSql, param);
+            var id = SqlHelper.ExcuteNonQuery(searchSql, param);
             return id;
         }
 
@@ -210,8 +203,7 @@ VALUES
             if (questionId < 1) return 0;
             var searchSql = string.Format(@"SELECT count(id) from {0} 
 where PiFQuestionId={1}", DataTableGlobal.PiFQuestionViewInfo, questionId);
-            var sqlHelper = new FreshSqlHelper();
-            var id = sqlHelper.ExcuteNonQuery(searchSql, null);
+            var id = SqlHelper.ExcuteNonQuery(searchSql, null);
             return id;
         }
     }

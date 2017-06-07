@@ -1,14 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using FreshCommonUtility.Cache;
+using FreshCommonUtility.Configure;
 using Microsoft.AspNetCore.Http;
-using Pc.Information.CoreModel;
 using Pc.Information.DataAccess.LogDataAccess;
 using Pc.Information.Interface.ILogHistoryBll;
 using Pc.Information.Model.Enum;
 using Pc.Information.Model.ErrorInfoLog;
-using Pc.Information.Utility.Cache;
-using Pc.Information.Utility.Configure;
 
 namespace Pc.Information.Business.LogHistoryBll
 {

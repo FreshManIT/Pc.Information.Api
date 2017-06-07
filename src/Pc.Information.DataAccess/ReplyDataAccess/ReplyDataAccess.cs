@@ -4,9 +4,9 @@ using System.Linq;
 using Pc.Information.DataAccess.Common;
 using Dapper;
 using Pc.Information.Model.QuestionInfo;
-using Pc.Information.Utility.FreshSqlHelper;
 using System.Text;
 using System.Data;
+using FreshCommonUtility.SqlHelper;
 
 namespace Pc.Information.DataAccess.ReplyDataAccess
 {
@@ -53,13 +53,12 @@ namespace Pc.Information.DataAccess.ReplyDataAccess
             {0}.PiFReplyId = reply.Id
         AND {0}.PiFUerId = {1}
 	) AS HasePraise ", DataTableGlobal.PiFreplypraisedinfo,userId);
-            var sqlHelper = new FreshSqlHelper();
             var param = new DynamicParameters();
             param.Add("id", questionId);
             param.Add("startTime", startTime, DbType.DateTime);
             param.Add("endTime", endTime, DbType.DateTime);
             param.Add("PiFReplyContent", "%" + likeContent + "%");
-            var errorLogList = sqlHelper.SearchPageList<PiFQuestionReplyInfoModel>(DataTableGlobal.PiFquestionreplyinfo + " reply," + DataTableGlobal.PiFUsers + " users ", strWhere.ToString(), orderBy,
+            var errorLogList = SqlHelper.SearchPageList<PiFQuestionReplyInfoModel>(DataTableGlobal.PiFquestionreplyinfo + " reply," + DataTableGlobal.PiFUsers + " users ", strWhere.ToString(), orderBy,
                 fieldList, pageIndex, pageSize, param, out countNumber);
             return errorLogList.ToList();
         }
@@ -87,9 +86,8 @@ VALUES
 		@PiFReplyTime,
 		@PiFReplyUserId
 	)", DataTableGlobal.PiFquestionreplyinfo);
-            var sqlHelper = new FreshSqlHelper();
             var param = new DynamicParameters(newReplyInfo);
-            var userId = sqlHelper.ExcuteNonQuery(searchSql, param);
+            var userId = SqlHelper.ExcuteNonQuery(searchSql, param);
             return userId;
         }
 
@@ -114,9 +112,8 @@ VALUES
 		@PiFReplyId,
 		@PiFPraisedType
 	)", DataTableGlobal.PiFreplypraisedinfo);
-            var sqlHelper = new FreshSqlHelper();
             var param = new DynamicParameters(replyPraisedModel);
-            var id = sqlHelper.ExcuteNonQuery(searchSql, param);
+            var id = SqlHelper.ExcuteNonQuery(searchSql, param);
             return id;
         }
 
@@ -138,8 +135,7 @@ WHERE
 	1 = 1 ", DataTableGlobal.PiFreplypraisedinfo);
             if (replyId > 0) searchSql.AppendFormat(@" AND PiFReplyId = {0} ", replyId);
             if (userId > 0) searchSql.AppendFormat(@" AND PiFUerId = {0} ", userId);
-            var sqlHelper = new FreshSqlHelper();
-            var resulteList = sqlHelper.FindToList<PiFReplyPraisedInfoModel>(searchSql.ToString(), null);
+            var resulteList = SqlHelper.FindToList<PiFReplyPraisedInfoModel>(searchSql.ToString(), null);
             return resulteList.ToList();
         }
     }

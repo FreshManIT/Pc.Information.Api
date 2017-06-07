@@ -1,13 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Pc.Information.CoreModel;
+using FreshCommonUtility.Cache;
+using FreshCommonUtility.Configure;
 using Pc.Information.DataAccess.LogDataAccess;
 using Pc.Information.Interface.ILogHistoryBll;
+using Pc.Information.Model.ErrorInfoLog;
 using Pc.Information.Model.InformationLog;
 using Pc.Information.Model.User;
-using Pc.Information.Utility.Cache;
-using Pc.Information.Utility.Configure;
 
 namespace Pc.Information.Business.LogHistoryBll
 {

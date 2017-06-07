@@ -1,8 +1,8 @@
 ﻿using System.Threading.Tasks;
 using Dapper;
+using FreshCommonUtility.SqlHelper;
 using Pc.Information.DataAccess.Common;
 using Pc.Information.Model.InformationLog;
-using Pc.Information.Utility.FreshSqlHelper;
 
 namespace Pc.Information.DataAccess.LogDataAccess
 {
@@ -35,9 +35,8 @@ VALUES
 @PiFContent,
 @PiFSendTime
 	)", DataTableGlobal.PiFinformationlog);
-            var sqlHelper = new FreshSqlHelper();
             var param = new DynamicParameters(newLogInfo);
-            var id = sqlHelper.ExcuteNonQueryAsync(searchSql, param);
+            var id = SqlHelper.ExcuteNonQueryAsync(searchSql, param);
             return id;
         }
     }

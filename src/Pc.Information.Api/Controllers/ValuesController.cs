@@ -1,13 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using MailKit.Net.Smtp;
-using MailKit.Security;
+﻿using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
-using Pc.Information.Utility.Security;
-using Pc.Information.Utility.Web;
-using Pc.Information.Utility.DataConvert;
 
 namespace Pc.Information.Api.Controllers
 {

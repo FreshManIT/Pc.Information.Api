@@ -1,14 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using Newtonsoft.Json;
+using FreshCommonUtility.Cache;
+using FreshCommonUtility.Email;
+using FreshCommonUtility.Security;
 using Pc.Information.Business.LogHistoryBll;
-using Pc.Information.DataAccess.UserInfoDataAccess;
-using Pc.Information.Interface.IUserInfoBll;
 using Pc.Information.Model.BaseModel;
 using Pc.Information.Model.User;
-using Pc.Information.Utility.Cache;
-using Pc.Information.Utility.Email;
-using Pc.Information.Utility.Security;
+using Pc.Information.DataAccess.UserInfoDataAccess;
+using Pc.Information.Interface.IUserInfoBll;
 
 namespace Pc.Information.Business.UserInfoBll
 {
